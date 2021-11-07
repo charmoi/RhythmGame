@@ -12,12 +12,14 @@
 #define J 3
 #define K 4
 
-#define IMG_POOL 5		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
+#define IMG_POOL 7		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
 
 //#define DELAY 5		// 노래 및 노트 시작 딜레이; 싱크 조절용
 
 using namespace std;
 using namespace bangtal;
+
+HANDLE g_hTimerQueue;
 
 //---------------ingame_page의 고정 객체-----------------
 
@@ -46,6 +48,7 @@ int beat_index;					// bpmT에서 note_map 배열의 각 행을 읽기 위한 인덱스
 TimerPtr bpmT;
 TimerPtr frameT;
 bool songPlaying;				// 노래 최초 재생 이후 재생 중첩 방지용
+bool rendering;					// 렌더링 타이머 인터럽트용
 
 // 노래의 bpm 기준으로 노트 y좌표 지정
 //int NoteLocater(int bpm, int bar);
@@ -62,7 +65,7 @@ void InitInGame();
 void BeatTimer();
 // 게임 화면 렌더링 함수 설정
 // InitInGame 함수에 포함
-void Render();
+//void Render();
 // 게임 페이지 리셋
 void ResetInGame();
 // 게임 플레이 페이지로 이동

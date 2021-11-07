@@ -1,7 +1,8 @@
 #pragma once
 #include <bangtal>
+#include <Windows.h>
 
-#define SPEED 20		// 프레임 반복마다 노트 이미지가 이동하는 픽셀거리
+#define SPEED 1		// 프레임 반복마다 노트 이미지가 이동하는 픽셀거리
 
 using namespace std;
 using namespace bangtal;
@@ -24,5 +25,6 @@ public:
 	// y좌표로 이동
 	void ReturnStart(ScenePtr& scene);
 
-	friend void Render();
+	//friend void Render();
+	friend VOID CALLBACK timerCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired);
 };
