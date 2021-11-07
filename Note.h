@@ -26,5 +26,5 @@ public:
 	void ReturnStart(ScenePtr& scene);
 
 	//friend void Render();
-	friend VOID CALLBACK timerCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired);
+	friend VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired);
 };
