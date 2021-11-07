@@ -145,84 +145,8 @@ void InitInGame() {
 	}
 	score.Create(temp, 16, ingame_page, 141, Y(98), 6);
 
-	//BeatTimer();
-
-	//Render();
-
 	SetKeyboard();
 }
-
-//void BeatTimer() {
-//	bpmTosec = (double) 60 / 100 / 8;	// bpmTosec식 = 60초 / bpm / split(한 박을 몇개로 쪼갰는가)
-//	bpmT = Timer::create(bpmTosec);		// 100 bpm에 16분음표 단위(split = 8)로 초기화
-//	bpmT->setOnTimerCallback([&](TimerPtr timer)->bool {
-//		if (!songPlaying) {
-//			songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
-//			songPlaying = true;						// 최초 재생 이후, 재생 반복 방지
-//		}
-//		for (int i = 0; i < 5; i++) {		// map의 열: key 종류
-//			if (note_map[beat_index * 5 + i]) {
-//				note_move[i][img_index[i]] = true;	// 각 키별로 IMG_POOL만큼의 이미지를 사이클로 돌아가며 사용
-//				if (++img_index[i] > IMG_POOL - 1) {
-//					img_index[i] = 0;
-//				}
-//			}
-//		}
-//		if (++beat_index >= lines) {					// 다음 타이머 콜백시, note_map의 다음 행 읽기
-//			rendering = false;
-//			return true;
-//		}
-//
-//		timer->set(bpmTosec);
-//		timer->start();
-//		return true;
-//		});
-//}
-
-//VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
-//	for (int i = 0; i < 5; i++) {
-//		for (int j = 0; j < IMG_POOL; j++) {
-//			if (note_move[i][j]) {
-//				note_img[i][j].Drop(ingame_page);
-//			}
-//			if (note_img[i][j].y < 0) {
-//				note_move[i][j] = false;
-//				note_img[i][j].ReturnStart(ingame_page);
-//			}
-//
-//		}
-//	}
-//
-//	if (!rendering) {
-//		Sleep(1000);
-//		if (DeleteTimerQueueEx(frame_timer, nullptr)) {
-//			cout << "Rendering stopped safely" << endl;
-//		}
-//	}
-//}
-//
-//VOID CALLBACK beatCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
-//	if (!songPlaying) {
-//		songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
-//		songPlaying = true;						// 최초 재생 이후, 재생 반복 방지
-//	}
-//	for (int i = 0; i < 5; i++) {		// map의 열: key 종류
-//		if (note_map[beat_index * 5 + i]) {
-//			note_move[i][img_index[i]] = true;	// 각 키별로 IMG_POOL만큼의 이미지를 사이클로 돌아가며 사용
-//			if (++img_index[i] > IMG_POOL - 1) {
-//				img_index[i] = 0;
-//			}
-//		}
-//	}
-//	if (++beat_index >= lines) {				// 다음 타이머 콜백시, note_map의 다음 행 읽기
-//		Sleep(1000);
-//		if (DeleteTimerQueueEx(beat_timer, nullptr)) {
-//			cout << "Beat timer stopped safely" << endl;
-//			rendering = false;
-//		}
-//	}
-//
-//}
 
 VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 	if (!songPlaying) {
@@ -264,38 +188,10 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 
 }
 
-void CreateTimer() {
-	//frame_timer = CreateTimerQueue();
-
-	/*HANDLE hTimer;*/
-	CreateTimerQueueTimer(&frame_timer, nullptr, frameCallback, nullptr, 100, 1, WT_EXECUTEDEFAULT);
-	//CreateTimerQueueTimer(&frame_timer, nullptr, beatCallback, nullptr, 100, bpmTosec, WT_EXECUTEDEFAULT);
-}
-
-//void Render() {
-//	frameT = Timer::create(0.01f); // framerate: 0.01초
-//	frameT->setOnTimerCallback([&](TimerPtr timer)->bool {
-//		if (!rendering) {
-//			timer->set(0.01f);
-//			return true;
-//		}
-//		for (int i = 0; i < 5; i++) {
-//			for (int j = 0; j < IMG_POOL; j++) {
-//				if (note_move[i][j]) {
-//					note_img[i][j].Drop(ingame_page);
-//				}
-//				if (note_img[i][j].y < 0) {
-//					note_move[i][j] = false;
-//					note_img[i][j].ReturnStart(ingame_page);
-//				}
+//void CreateTimer() {
+//	//frame_timer = CreateTimerQueue();
 //
-//			}
-//		}
-//
-//		timer->set(0.01f);
-//		timer->start();
-//		return true;
-//		});
+//	/*HANDLE hTimer;*/
 //}
 
 void ResetInGame() {
@@ -309,9 +205,7 @@ void ResetInGame() {
 		}
 	}
 	bpmTosec = (double) 60 / bpm / split * 1000;	// bpmTosec식 = 60초 / bpm / split(한 박을 몇개로 쪼갰는가)
-	//bpmT->set(bpmTosec);
 	songPlaying = false;
-	//rendering = true;
 	line_index = 0;
 	ms_index = 0;
 }
@@ -326,7 +220,5 @@ void InGame() {
 	}
 
 	ingame_page->enter();
-	CreateTimer();
-	//frameT->start();		// 화면 렌더링 시작
-	//bpmT->start();			// 박자 카운트 및 노래 시작
+	CreateTimerQueueTimer(&frame_timer, nullptr, frameCallback, nullptr, 100, 1, WT_EXECUTEDEFAULT);
 }

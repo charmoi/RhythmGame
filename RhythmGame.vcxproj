@@ -142,7 +142,6 @@
     <ClCompile Include="InGame.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Note.cpp" />
-    <ClCompile Include="Others.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="SongInfo.cpp" />
     <ClCompile Include="SongSelect.cpp" />

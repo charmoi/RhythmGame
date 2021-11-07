@@ -25,6 +25,5 @@ public:
 	// y좌표로 이동
 	void ReturnStart(ScenePtr& scene);
 
-	//friend void Render();
 	friend VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired);
 };

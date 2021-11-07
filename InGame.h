@@ -42,17 +42,12 @@ int split;	// 한 박을 몇 개로 쪼갰는가
 
 //---------------Timer 관련 변수-----------------
 
-//float bpmTosec;
-int bpmTosec;
+int bpmTosec;					// bpm과 split을 토대로 노래 최소 박자를 ms 단위로 변환
 bool note_move[5][IMG_POOL];	// 5가지 key에 대해, note_img를 움직일지 말지 저장
 char img_index[5];				// note_move[][i]의 i 인덱스 값을 저장
 int line_index;					// bpmT에서 note_map 배열의 각 행을 읽기 위한 인덱스
-//TimerPtr bpmT;
-//TimerPtr frameT;
 bool songPlaying;				// 노래 최초 재생 이후 재생 중첩 방지용
-//bool rendering;					// 렌더링 타이머 인터럽트용
 int ms_index;					// 1ms 타이머용 인덱스
-int ms_total;					// 종료 기준 시각 ms 단위
 
 // 노래의 bpm 기준으로 노트 y좌표 지정
 //int NoteLocater(int bpm, int bar);
@@ -63,13 +58,8 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map);
 void SetKeyboard();
 // 게임 플레이 페이지 빌드
 void InitInGame();
-// 비트에 맞춰 돌아가는 타이머 설정
-// InitInGame 함수에 포함
-// beat 설정값은 ResetInGame 함수에서 현재 곡 map file 리딩 결과에 따라 입력됨
-//void BeatTimer();
-// 게임 화면 렌더링 함수 설정
-// InitInGame 함수에 포함
-//void Render();
+// 렌더링용 타이머 콜백 함수
+VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired);
 // 게임 페이지 리셋
 void ResetInGame();
 // 게임 플레이 페이지로 이동
