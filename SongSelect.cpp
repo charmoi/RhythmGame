@@ -33,7 +33,7 @@ void InitSelectPage(){
 	grade->hide();
 	instruction = Object::create("Images/select_inst.png", select_page, 1016, Y(696));
 	shade = Object::create("Images/album_shade.png", select_page, -112, Y(512));
-	slide = Sound::create("Sounds/slide.mp3");
+	slide = Sound::create("Sounds/slide_low.mp3");
 
 	song_index = 0;
 

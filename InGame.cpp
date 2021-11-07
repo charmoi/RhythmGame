@@ -165,7 +165,7 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 
 		}
 	}
-	if (ms_index++ == 0) {								// bpmTosec 단위로 map 배열 검사
+	if (ms_index == 0) {								// bpmTosec 단위로 map 배열 검사
 		for (int i = 0; i < 5; i++) {					// 1회 검사에 5개씩 읽기; 5키
 			if (note_map[line_index * 5 + i]) {
 				note_move[i][img_index[i]] = true;
@@ -176,13 +176,13 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 		}
 		if (++line_index == lines) {				// 다음 검사 시, note_map의 다음 행 읽기
 			Sleep(1000);							// 총 라인 수에 도달하면 타이머 소멸, 렌더링 종료
-			if (DeleteTimerQueueEx(frame_timer, nullptr)) {
-				cout << "Rendering stopped safely" << endl;
+			if (DeleteTimerQueueTimer(nullptr, &frame_timer, INVALID_HANDLE_VALUE)) {
+				cout << "\nRendering stopped safely" << endl;
 			}
 		}
 	}
 
-	if (ms_index == bpmTosec) {
+	if (++ms_index > bpmTosec) {
 		ms_index = 0;
 	}
 
@@ -220,5 +220,5 @@ void InGame() {
 	}
 
 	ingame_page->enter();
-	CreateTimerQueueTimer(&frame_timer, nullptr, frameCallback, nullptr, 100, 1, WT_EXECUTEDEFAULT);
+	CreateTimerQueueTimer(&frame_timer, nullptr, frameCallback, nullptr, 100, 1, WT_EXECUTELONGFUNCTION);
 }
