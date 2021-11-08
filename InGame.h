@@ -14,13 +14,8 @@
 
 #define IMG_POOL 7		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
 
-//#define DELAY 5		// 노래 및 노트 시작 딜레이; 싱크 조절용
-
 using namespace std;
 using namespace bangtal;
-
-HANDLE frame_timer;
-//HANDLE beat_timer;
 
 //---------------ingame_page의 고정 객체-----------------
 
@@ -42,6 +37,11 @@ int split;	// 한 박을 몇 개로 쪼갰는가
 
 //---------------Timer 관련 변수-----------------
 
+//HANDLE timerQueue;				//
+HANDLE frameTimer;
+int timerResult;
+bool lastLine;
+
 int bpmTosec;					// bpm과 split을 토대로 노래 최소 박자를 ms 단위로 변환
 bool note_move[5][IMG_POOL];	// 5가지 key에 대해, note_img를 움직일지 말지 저장
 char img_index[5];				// note_move[][i]의 i 인덱스 값을 저장
@@ -49,8 +49,6 @@ int line_index;					// bpmT에서 note_map 배열의 각 행을 읽기 위한 인덱스
 bool songPlaying;				// 노래 최초 재생 이후 재생 중첩 방지용
 int ms_index;					// 1ms 타이머용 인덱스
 
-// 노래의 bpm 기준으로 노트 y좌표 지정
-//int NoteLocater(int bpm, int bar);
 
 // 노트 맵 생성
 bool CreateMap(int& index, unique_ptr<bool[]>& note_map);

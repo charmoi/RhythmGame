@@ -1,13 +1,7 @@
 #include "InGame.h"
 #include "Others.h"
 #include <Windows.h>
-//#include <winnt.h>
 #include <threadpoollegacyapiset.h>
-//#pragma comment(lib, "Kernel32.lib")
-
-//int NoteLocater(int bpm, int bar) {
-//	return 669 + (bar + ((double)DELAY / (double)60 / (double)bpm / (double)32)) * SPEED;
-//}
 
 bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 	note_map.reset();
@@ -84,6 +78,14 @@ void SetKeyboard() {
 		case KeyCode::KEY_SPACE:
 			if (pressed) {
 				keylight[SP]->show();
+				if (lastLine) {
+					if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
+						cout << "\nTimer deleted" << endl;
+					}
+					else {
+						cout << "\nTimer deletion failed" << endl;
+					}
+				}
 			}
 			else {
 				keylight[SP]->hide();
@@ -165,6 +167,10 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 
 		}
 	}
+	if (line_index == lines) {					// 다음 검사 시, note_map의 다음 행 읽기
+		lastLine = true;							// 총 라인 수에 도달하면 타이머 소멸, 렌더링 종료
+		return;
+	}
 	if (ms_index == 0) {								// bpmTosec 단위로 map 배열 검사
 		for (int i = 0; i < 5; i++) {					// 1회 검사에 5개씩 읽기; 5키
 			if (note_map[line_index * 5 + i]) {
@@ -174,25 +180,16 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 				}
 			}
 		}
-		if (++line_index == lines) {				// 다음 검사 시, note_map의 다음 행 읽기
-			Sleep(1000);							// 총 라인 수에 도달하면 타이머 소멸, 렌더링 종료
-			if (DeleteTimerQueueTimer(nullptr, &frame_timer, INVALID_HANDLE_VALUE)) {
-				cout << "\nRendering stopped safely" << endl;
-			}
-		}
+		line_index++;
 	}
 
-	if (++ms_index > bpmTosec) {
+	if (++ms_index == bpmTosec) {
 		ms_index = 0;
 	}
-
+	if (lastLine) {
+		cout << "\nWrong process" << endl;
+	}
 }
-
-//void CreateTimer() {
-//	//frame_timer = CreateTimerQueue();
-//
-//	/*HANDLE hTimer;*/
-//}
 
 void ResetInGame() {
 	console->setImage(songs[song_index].cs);
@@ -208,6 +205,7 @@ void ResetInGame() {
 	songPlaying = false;
 	line_index = 0;
 	ms_index = 0;
+	lastLine = false;
 }
 
 void InGame() {
@@ -220,5 +218,5 @@ void InGame() {
 	}
 
 	ingame_page->enter();
-	CreateTimerQueueTimer(&frame_timer, nullptr, frameCallback, nullptr, 100, 1, WT_EXECUTELONGFUNCTION);
+	CreateTimerQueueTimer(&frameTimer, NULL, frameCallback, NULL, 100, 1, WT_EXECUTEDEFAULT);
 }

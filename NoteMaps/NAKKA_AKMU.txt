@@ -1,7 +1,7 @@
 title	NAKKA						
 artist	AKMU						
-bpm	101						
-lines	1184						
+bpm	100						
+bars	1184						
 split	8						
 							
 bars	beats	splits	D	F	S	J	K
