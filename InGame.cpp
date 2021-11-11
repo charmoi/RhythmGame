@@ -201,7 +201,7 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 		for (int j = 0; j < IMG_POOL; j++) {
 			if (note_move[i][j]) {
 				note_img[i][j].Drop(ingame_page, speed);
-				if (note_img[i][j].y < -14) {
+				if (note_img[i][j].y < -33) {
 					if (++time_index[i] == IMG_POOL) {	// 노트 시작 시간 인덱스 증가; 다음 떨어지는 노트의 시간 읽기
 						time_index[i] = 0;
 					}
@@ -248,7 +248,8 @@ void ResetInGame() {
 			note_time[i][j] = 10000;				// 게임 시작 시 막 눌렀을 때 판정 인식되는 거 방지
 		}
 	}
-	bpmTosec = (double) 60 / bpm / split * 1000;	// bpmTosec식 = 60초 / bpm / split(한 박을 몇개로 쪼갰는가)
+	// 나눠 떨어지는 수로 넣어야함!!
+	bpmTosec = 60 * 1000 / bpm / split;	// bpmTosec식 = 60초 * 1000(ms변환) / bpm / split(한 박을 몇개로 쪼갰는가)
 	songPlaying = false;
 	line_index = 0;
 	ms_index = 0;									// ms_index는 0부터 시작

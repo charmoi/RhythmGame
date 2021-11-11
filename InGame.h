@@ -13,7 +13,7 @@
 #define J 3
 #define K 4
 
-#define IMG_POOL 7		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
+#define IMG_POOL 5		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
 
 using namespace std;
 using namespace bangtal;
