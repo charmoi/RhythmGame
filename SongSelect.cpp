@@ -62,6 +62,7 @@ void InitSelectPage(){
 }
 
 void Slide(char dir) {
+	slide->stop();
 	songs[song_index].Stop();
 	slide->play();
 	char right, left;
