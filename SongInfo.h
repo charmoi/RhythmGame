@@ -17,12 +17,13 @@ protected:
 	string mapfile;
 	int highscore;
 	string grade;
+	char speed;
 
 public:
 	SongInfo();
-	SongInfo(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile);
+	SongInfo(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile, const char speed);
 	// 기본 정보 입력
-	void Create(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile);
+	void Create(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile, const char speed);
 	// 노래 재생
 	void Play(bool loop = false);
 	// 노래 정지

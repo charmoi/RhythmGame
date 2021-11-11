@@ -56,6 +56,10 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 	return true;
 };
 
+void NoteJudge(int press_time, int start_time) {
+
+}
+
 void SetKeyboard() {
 	ingame_page->setOnKeyboardCallback([&](ScenePtr scene, KeyCode key, bool pressed)->bool {
 		switch (key) {
@@ -78,14 +82,6 @@ void SetKeyboard() {
 		case KeyCode::KEY_SPACE:
 			if (pressed) {
 				keylight[SP]->show();
-				if (lastLine) {
-					if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
-						cout << "\nTimer deleted" << endl;
-					}
-					else {
-						cout << "\nTimer deletion failed" << endl;
-					}
-				}
 			}
 			else {
 				keylight[SP]->hide();
@@ -110,6 +106,18 @@ void SetKeyboard() {
 		case KeyCode::KEY_ESCAPE:
 			if (pressed) {
 
+			}
+			break;
+		case KeyCode::KEY_ENTER:
+			if (pressed) {
+				if (safeEnd) {
+					if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
+						cout << "\nTimer deleted" << endl;
+					}
+					else {
+						cout << "\nTimer deletion failed" << endl;
+					}
+				}
 			}
 			break;
 		}
@@ -146,49 +154,67 @@ void InitInGame() {
 		temp[i] = buf;
 	}
 	score.Create(temp, 16, ingame_page, 141, Y(98), 6);
-
+	for (int i = 0; i < 10; i++) {
+		sprintf_s(buf, "Images/combo_%d.png", i);
+		temp[i] = buf;
+	}
+	score.Create(temp, 34, ingame_page, 126, Y(204), 3);
+	string img[4] = { "Images/perfect.png", "Images/great.png", "Images/good.png", "Images/miss.png" };
+	for (int i = 0; i < 4; i++) {
+		judge_img[i] = Object::create(img[i], ingame_page, 28, Y(220));
+		judge_img[i]->hide();
+	}
 	SetKeyboard();
 }
 
 VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
-	if (!songPlaying) {
+	if (!songPlaying && ms_count == delay) {
 		songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
 		songPlaying = true;						// 최초 재생 이후, 재생 반복 방지
 	}
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < IMG_POOL; j++) {
-			if (note_move[i][j]) {
-				note_img[i][j].Drop(ingame_page);
-			}
-			if (note_img[i][j].y < 0) {
-				note_move[i][j] = false;
-				note_img[i][j].ReturnStart(ingame_page);
-			}
 
-		}
-	}
-	if (line_index == lines) {					// 다음 검사 시, note_map의 다음 행 읽기
-		lastLine = true;							// 총 라인 수에 도달하면 타이머 소멸, 렌더링 종료
-		return;
-	}
-	if (ms_index == 0) {								// bpmTosec 단위로 map 배열 검사
+	if (!lastLine && ms_index == 0) {					// bpmTosec 단위로 map 배열 검사
 		for (int i = 0; i < 5; i++) {					// 1회 검사에 5개씩 읽기; 5키
 			if (note_map[line_index * 5 + i]) {
 				note_move[i][img_index[i]] = true;
+				note_time[i][img_index[i]] = ms_count;	// note 시작 시간 기록
 				if (++img_index[i] == IMG_POOL) {		// 각 키별로 IMG_POOL만큼의 이미지를 사이클로 돌아가며 사용
 					img_index[i] = 0;
 				}
 			}
 		}
-		line_index++;
+		line_index++;									// 다음 검사 시, note_map의 다음 행 읽기
+	}
+
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < IMG_POOL; j++) {
+			if (note_move[i][j]) {
+				note_img[i][j].Drop(ingame_page, speed);
+				if (note_img[i][j].y < 0) {
+					note_move[i][j] = false;
+					note_img[i][j].ReturnStart(ingame_page);
+				}
+			}
+		}
+	}
+
+	if (line_index == lines) {							// 총 라인 수에 도달하면 렌더링 종료 프로세스 시작
+		lastLine = true;
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < IMG_POOL; j++) {
+				if (note_img[i][j].y == 0) {			// 모든 노트 이미지가 정위치에 돌아갈 때까지 기다림
+					safeEnd = true;					// 종료 키 (타이머 소멸 함수) 작동 가능
+				}
+			}
+		}
+		return;
 	}
 
 	if (++ms_index == bpmTosec) {
 		ms_index = 0;
 	}
-	if (lastLine) {
-		cout << "\nWrong process" << endl;
-	}
+
+	ms_count++;
 }
 
 void ResetInGame() {
@@ -199,6 +225,7 @@ void ResetInGame() {
 		img_index[i] = 0;
 		for (int j = 0; j < IMG_POOL; j++) {
 			note_move[i][j] = false;
+			note_img[i][j].ReturnStart(ingame_page);
 		}
 	}
 	bpmTosec = (double) 60 / bpm / split * 1000;	// bpmTosec식 = 60초 / bpm / split(한 박을 몇개로 쪼갰는가)
@@ -206,6 +233,10 @@ void ResetInGame() {
 	line_index = 0;
 	ms_index = 0;
 	lastLine = false;
+	safeEnd = false;
+	ms_count = 0;
+	speed = songs[song_index].speed;				// delay 값이 정수로 나누어떨어지도록 680의 약수로 설정
+	delay = 680 / speed;							// 680: 노트 출발지점부터 판정선까지의 이동거리
 }
 
 void InGame() {

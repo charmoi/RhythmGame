@@ -4,10 +4,11 @@
 void InitSelectPage(){
 	// 곡 정보 입력
 	select_page = Scene::create("곡선택", "Images/tutorial_bg.png");
-	songs[0].Create("Images/tutorial_bg.png", "Images/tutorial_cover.png", "Images/tutorial_info.png", "Sounds/NAKKA_100.mp3", "Images/tutorial_cs.png", "Images/tutorial_result.png", "NoteMaps/NAKKA_AKMU.txt");
-	songs[1].Create("Images/parachute_bg.png", "Images/parachute_cover.png", "Images/parachute_info.png", "Sounds/parachute.mp3", "Images/parachute_cs.png", "Images/parachute_result.png", "NoteMaps/NAKKA_AKMU.txt");
-	songs[2].Create("Images/STAY_bg.png", "Images/STAY_cover.png", "Images/STAY_info.png", "Sounds/STAY.mp3", "Images/STAY_cs.png", "Images/STAY_result.png", "NoteMaps/NAKKA_AKMU.txt");
-	songs[3].Create("Images/AfterSchool_bg.png", "Images/AfterSchool_cover.png", "Images/AfterSchool_info.png", "Sounds/AfterSchool.mp3", "Images/AfterSchool_cs.png", "Images/AfterSchool_result.png", "NoteMaps/NAKKA_AKMU.txt");
+	// speed 변수에는 680의 약수만 넣기 ex) 1, 2, 4, 5, 6, 8, 10
+	songs[0].Create("Images/tutorial_bg.png", "Images/tutorial_cover.png", "Images/tutorial_info.png", "Sounds/NAKKA_100.mp3", "Images/tutorial_cs.png", "Images/tutorial_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
+	songs[1].Create("Images/parachute_bg.png", "Images/parachute_cover.png", "Images/parachute_info.png", "Sounds/parachute.mp3", "Images/parachute_cs.png", "Images/parachute_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
+	songs[2].Create("Images/STAY_bg.png", "Images/STAY_cover.png", "Images/STAY_info.png", "Sounds/STAY.mp3", "Images/STAY_cs.png", "Images/STAY_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
+	songs[3].Create("Images/AfterSchool_bg.png", "Images/AfterSchool_cover.png", "Images/AfterSchool_info.png", "Sounds/AfterSchool.mp3", "Images/AfterSchool_cs.png", "Images/AfterSchool_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
 
 	// 화면 내 오브젝트 생성; tutorial 이미지 기준으로 최초 설정
 	background = Object::create(songs[0].bg, select_page, 0, 0);

@@ -9,16 +9,17 @@ SongInfo::SongInfo() {
 	mapfile = "\0";
 	highscore = 0;
 	grade = "\0";
+	speed = 0;
 }
 
-SongInfo::SongInfo(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile)
-	: bg(bg), img(img), info(info), cs(cs), result(result), mapfile(mapfile) {
+SongInfo::SongInfo(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile, const char speed)
+	: bg(bg), img(img), info(info), cs(cs), result(result), mapfile(mapfile), speed(speed) {
 	this->sound = Sound::create(sound);
 	highscore = 0;
 	grade = "\0";
 }
 
-void SongInfo::Create(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile){
+void SongInfo::Create(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile, const char speed){
 	this->bg = bg;
 	this->img = img;
 	this->info = info;
@@ -26,6 +27,7 @@ void SongInfo::Create(const string& bg, const string& img, const string& info, c
 	this->result = result;
 	this->mapfile = mapfile;
 	this->sound = Sound::create(sound);
+	this->speed = speed;
 }
 
 void SongInfo::Play(bool loop) {

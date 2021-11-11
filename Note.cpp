@@ -14,8 +14,8 @@ void Note::Create(const string& img, ScenePtr& scene, int x, int y) {
 	object = Object::create(img, scene, x, y);
 }
 
-void Note::Drop(ScenePtr& scene) {
-	y -= SPEED;
+void Note::Drop(ScenePtr& scene, char& speed) {
+	y -= speed;
 	object->locate(scene, x, y);
 }
 

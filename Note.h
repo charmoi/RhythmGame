@@ -2,8 +2,6 @@
 #include <bangtal>
 #include <Windows.h>
 
-#define SPEED 1		// 프레임 반복마다 노트 이미지가 이동하는 픽셀거리
-
 using namespace std;
 using namespace bangtal;
 
@@ -21,7 +19,7 @@ public:
 	// 노트 생성
 	void Create(const string& img, ScenePtr& scene, int x, int y);
 	// 노트 하강
-	void Drop(ScenePtr& scene);
+	void Drop(ScenePtr& scene, char& speed);
 	// y좌표로 이동
 	void ReturnStart(ScenePtr& scene);
 
