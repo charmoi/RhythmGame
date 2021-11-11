@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="InGame.cpp" />
+    <ClCompile Include="Judge.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Note.cpp" />
     <ClCompile Include="Score.cpp" />
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InGame.h" />
+    <ClInclude Include="Judge.h" />
     <ClInclude Include="Note.h" />
     <ClInclude Include="Others.h" />
     <ClInclude Include="Score.h" />

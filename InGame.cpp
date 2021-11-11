@@ -56,52 +56,63 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 	return true;
 };
 
-void NoteJudge(int press_time, int start_time) {
+bool NoteJudge(int press_time, int start_time) {
+	int diff_abs = abs(press_time - (start_time + delay));	// delay: 노트가 출발 지점(0)부터 judgeline(680)까지 도달하는 데 소요되는 시간(ms)
+	if (diff_abs < 20) {
+		score.Add(judge.PerfectInc()); // ***콤보 보너스 추가하기!!!
+		return true;
+	}
+	else if (diff_abs < 40) {
+		score.Add(judge.GreatInc());
+		return true;
+	}
+	else if (diff_abs < 85) {
+		score.Add(judge.GoodInc());
+		return true;
+	}
+	
+	return false;	// miss 판정은 timer 콜백에 있음
+}
 
+void KeyAction(char key, bool& pressed, int pressed_t) {
+	if (pressed) {
+		if (NoteJudge(pressed_t, note_time[key][time_index[key]])) {
+			note_move[key][time_index[key]] = false;
+			note_img[key][time_index[key]].ReturnStart(ingame_page);
+			if (++time_index[key] == IMG_POOL) {						// IMG_POOL만큼의 인덱스를 사이클로 돌아가며 순차적으로 읽음
+				time_index[key] = 0;
+			}
+			combo.Increase();
+		}
+		keylight[key]->show();
+	}
+	else {
+		keylight[key]->hide();
+	}
 }
 
 void SetKeyboard() {
 	ingame_page->setOnKeyboardCallback([&](ScenePtr scene, KeyCode key, bool pressed)->bool {
 		switch (key) {
 		case KeyCode::KEY_D:
-			if (pressed) {
-				keylight[D]->show();
-			}
-			else {
-				keylight[D]->hide();
-			}
+			pressed_time[D] = ms_count;
+			KeyAction(D, pressed, pressed_time[D]);
 			break;
 		case KeyCode::KEY_F:
-			if (pressed) {
-				keylight[F]->show();
-			}
-			else {
-				keylight[F]->hide();
-			}
+			pressed_time[F] = ms_count;
+			KeyAction(F, pressed, pressed_time[F]);
 			break;
 		case KeyCode::KEY_SPACE:
-			if (pressed) {
-				keylight[SP]->show();
-			}
-			else {
-				keylight[SP]->hide();
-			}
+			pressed_time[SP] = ms_count;
+			KeyAction(SP, pressed, pressed_time[SP]);
 			break;
 		case KeyCode::KEY_J:
-			if (pressed) {
-				keylight[J]->show();
-			}
-			else {
-				keylight[J]->hide();
-			}
+			pressed_time[J] = ms_count;
+			KeyAction(J, pressed, pressed_time[J]);
 			break;
 		case KeyCode::KEY_K:
-			if (pressed) {
-				keylight[K]->show();
-			}
-			else {
-				keylight[K]->hide();
-			}
+			pressed_time[K] = ms_count;
+			KeyAction(K, pressed, pressed_time[K]);
 			break;
 		case KeyCode::KEY_ESCAPE:
 			if (pressed) {
@@ -124,8 +135,6 @@ void SetKeyboard() {
 
 		return true;
 		});
-
-
 }
 
 void InitInGame() {
@@ -147,6 +156,7 @@ void InitInGame() {
 
 	console = Object::create(songs[0].cs, ingame_page, 0, 0);	// tutorial 이미지로 임시 설정
 	inst = Object::create("Images/ingame_inst.png", ingame_page, 967, Y(689));
+
 	string temp[10];
 	char buf[20];
 	for (int i = 0; i < 10; i++) {
@@ -154,16 +164,17 @@ void InitInGame() {
 		temp[i] = buf;
 	}
 	score.Create(temp, 16, ingame_page, 141, Y(98), 6);
+
 	for (int i = 0; i < 10; i++) {
 		sprintf_s(buf, "Images/combo_%d.png", i);
 		temp[i] = buf;
 	}
-	score.Create(temp, 34, ingame_page, 126, Y(204), 3);
-	string img[4] = { "Images/perfect.png", "Images/great.png", "Images/good.png", "Images/miss.png" };
-	for (int i = 0; i < 4; i++) {
-		judge_img[i] = Object::create(img[i], ingame_page, 28, Y(220));
-		judge_img[i]->hide();
-	}
+	combo.Create(temp, 34, ingame_page, 126, Y(204), 3);
+	combo.Hide();
+
+	string img[4] = { "Images/miss.png", "Images/good.png", "Images/great.png", "Images/perfect.png" };
+	judge.Create(img, ingame_page, 28, Y(220));
+
 	SetKeyboard();
 }
 
@@ -190,7 +201,12 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 		for (int j = 0; j < IMG_POOL; j++) {
 			if (note_move[i][j]) {
 				note_img[i][j].Drop(ingame_page, speed);
-				if (note_img[i][j].y < 0) {
+				if (note_img[i][j].y < -14) {
+					if (++time_index[i] == IMG_POOL) {	// 노트 시작 시간 인덱스 증가; 다음 떨어지는 노트의 시간 읽기
+						time_index[i] = 0;
+					}
+					combo.Reset();
+					judge.MissInc();
 					note_move[i][j] = false;
 					note_img[i][j].ReturnStart(ingame_page);
 				}
@@ -220,23 +236,28 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 void ResetInGame() {
 	console->setImage(songs[song_index].cs);
 	score.Reset();
+	score.Show();
+	combo.Reset();
 
 	for (int i = 0; i < 5; i++) {
 		img_index[i] = 0;
+		time_index[i] = 0;
 		for (int j = 0; j < IMG_POOL; j++) {
 			note_move[i][j] = false;
 			note_img[i][j].ReturnStart(ingame_page);
+			note_time[i][j] = 10000;				// 게임 시작 시 막 눌렀을 때 판정 인식되는 거 방지
 		}
 	}
 	bpmTosec = (double) 60 / bpm / split * 1000;	// bpmTosec식 = 60초 / bpm / split(한 박을 몇개로 쪼갰는가)
 	songPlaying = false;
 	line_index = 0;
-	ms_index = 0;
+	ms_index = 0;									// ms_index는 0부터 시작
 	lastLine = false;
 	safeEnd = false;
-	ms_count = 0;
+	ms_count = 1;									// ms_count는 1ms부터 시작
 	speed = songs[song_index].speed;				// delay 값이 정수로 나누어떨어지도록 680의 약수로 설정
 	delay = 680 / speed;							// 680: 노트 출발지점부터 판정선까지의 이동거리
+	judge.Reset();
 }
 
 void InGame() {

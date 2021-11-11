@@ -8,6 +8,7 @@ Score::Score() {
 	p = nullptr;
 	length = 0;
 	index = nullptr;
+	shown = true;
 }
 
 Score::Score(string* img, const int img_spacing, ScenePtr& scene, const int x, const int y, const int length) : length(length) {
@@ -21,6 +22,7 @@ Score::Score(string* img, const int img_spacing, ScenePtr& scene, const int x, c
 		index[i] = 0;
 	}
 	score = 0;
+	shown = true;
 }
 
 void Score::Create(string* img, const int img_spacing, ScenePtr& scene, const int x, const int y, const int length){
@@ -35,26 +37,42 @@ void Score::Create(string* img, const int img_spacing, ScenePtr& scene, const in
 		index[i] = 0;
 	}
 	score = 0;
+	shown = true;
 }
 
 void Score::Hide() {
 	for (int i = 0; i < length; i++)
 		p[i]->hide();
+	shown = false;
 }
 
 void Score::Show() {
 	for (int i = 0; i < length; i++)
 		p[i]->show();
+	shown = true;
 }
 
-void Score::Update(int score) {
-	if (!this->score) {
+void Score::Update(int amount) {
+	if (!shown)
 		Show();
-	}
-	this->score = score;
+
+	this->score = amount;
 	for (int i = 0; i < length; i++) {
-		index[i] = score % 10;
-		score /= 10;
+		index[i] = amount % 10;
+		amount /= 10;
+		p[i]->setImage(img[index[i]]);
+	}
+}
+
+void Score::Add(int amount) {
+	if (!shown)
+		Show();
+
+	this->score += amount;
+	int temp = score;
+	for (int i = 0; i < length; i++) {
+		index[i] = temp % 10;
+		temp /= 10;
 		p[i]->setImage(img[index[i]]);
 	}
 }
@@ -63,12 +81,13 @@ void Score::Reset() {
 	this->score = 0;
 	for (int i = 0; i < length; i++) {
 		p[i]->setImage(img[0]);
+		index[i] = 0;
 	}
 	Hide();
 }
 
 void Score::Increase() {
-	if (!this->score) {
+	if (!shown) {
 		Show();
 	}
 	this->score++;
@@ -82,4 +101,8 @@ void Score::Increase() {
 			p[i]->setImage(img[0]);
 		}
 	}
+}
+
+int Score::GetScore() {
+	return this->score;
 }

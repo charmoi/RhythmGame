@@ -12,6 +12,7 @@ private:
 	unique_ptr<ObjectPtr[]> p;
 	int length;					// 점수 자릿수; object 개수
 	unique_ptr<char[]> index;	// 각 자리별 이미지 인덱스(각 자리별 숫자)
+	bool shown;
 
 public:
 	Score();
@@ -22,9 +23,12 @@ public:
 	void Hide();
 	void Show();
 	// 점수 업데이트
-	void Update(int score);
+	void Update(int amount);
+	// amount만큼 점수 증가
+	void Add(int amount);
 	// 점수 0으로 리셋
 	void Reset();
 	// 점수 1증가
 	void Increase();
+	int GetScore();
 };
