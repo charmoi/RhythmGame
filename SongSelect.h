@@ -22,6 +22,7 @@ ObjectPtr grade;
 ObjectPtr instruction;
 ObjectPtr shade;
 SoundPtr slide;
+bool key_block;
 
 // ∞Ó º±≈√ ∆‰¿Ã¡ˆ ∫ÙµÂ
 void InitSelectPage();

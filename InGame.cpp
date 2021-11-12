@@ -111,8 +111,15 @@ void SetKeyboard() {
 			KeyAction(K, pressed, pressed_time[K]);
 			break;
 		case KeyCode::KEY_BACKSPACE:
-			if (pressed) {
-				// 나가기
+			if (!pressed) {
+				songs[song_index].Stop();
+				if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
+					cout << "\nTimer deleted" << endl;
+				}
+				else {
+					cout << "\nTimer deletion failed" << endl;
+				}
+				SongSelect();
 			}
 			break;
 		case KeyCode::KEY_ENTER:
@@ -148,7 +155,7 @@ void InitInGame() {
 		note_img[K][i].Create("Images/note4.png", ingame_page, 572, 720);
 	}
 
-	console = Object::create(songs[0].cs, ingame_page, 0, 0);	// tutorial 이미지로 임시 설정
+	console = Object::create(songs[0].cs, ingame_page, 0, 0);	// 0번 곡 이미지로 임시 설정
 
 	string temp[10];
 	char buf[20];
@@ -169,10 +176,13 @@ void InitInGame() {
 	judge.Create(img, ingame_page, 113, Y(220));
 
 	SetKeyboard();
+
+	//timerQueue = CreateTimerQueue();
 }
 
 VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 	if (!songPlaying && ms_count == delay) {
+		ingame_page->enter();
 		songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
 		songPlaying = true;						// 최초 재생 이후, 재생 반복 방지
 	}
@@ -262,7 +272,6 @@ void InGame() {
 		cout << "\nMap Building Failure." << endl;
 		endGame();
 	}
-
-	ingame_page->enter();
+	
 	CreateTimerQueueTimer(&frameTimer, NULL, frameCallback, NULL, 100, 1, WT_EXECUTEDEFAULT);
 }

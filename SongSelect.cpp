@@ -3,14 +3,14 @@
 
 void InitSelectPage(){
 	// 곡 정보 입력
-	select_page = Scene::create("곡선택", "Images/tutorial_bg.png");
+	select_page = Scene::create("곡선택", "Images/NAKKA_bg.png");
 	// speed 변수에는 680의 약수만 넣기 ex) 1, 2, 4, 5, 6, 8, 10
-	songs[0].Create("Images/tutorial_bg.png", "Images/tutorial_cover.png", "Images/tutorial_info.png", "Sounds/NAKKA_100.mp3", "Images/tutorial_cs.png", "Images/tutorial_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
+	songs[0].Create("Images/NAKKA_bg.png", "Images/NAKKA_cover.png", "Images/NAKKA_info.png", "Sounds/NAKKA_100.mp3", "Images/NAKKA_cs.png", "Images/NAKKA_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
 	songs[1].Create("Images/parachute_bg.png", "Images/parachute_cover.png", "Images/parachute_info.png", "Sounds/parachute.mp3", "Images/parachute_cs.png", "Images/parachute_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
 	songs[2].Create("Images/STAY_bg.png", "Images/STAY_cover.png", "Images/STAY_info.png", "Sounds/STAY.mp3", "Images/STAY_cs.png", "Images/STAY_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
 	songs[3].Create("Images/AfterSchool_bg.png", "Images/AfterSchool_cover.png", "Images/AfterSchool_info.png", "Sounds/AfterSchool.mp3", "Images/AfterSchool_cs.png", "Images/AfterSchool_result.png", "NoteMaps/NAKKA_AKMU.txt", 1);
 
-	// 화면 내 오브젝트 생성; tutorial 이미지 기준으로 최초 설정
+	// 화면 내 오브젝트 생성; 0번 song 이미지 기준으로 최초 설정
 	background = Object::create(songs[0].bg, select_page, 0, 0);
 	selected_bg = Object::create("Images/selected_bg.png", select_page, 369, 0);
 	song_selected = Object::create(songs[0].img, select_page, 400, 208);
@@ -37,23 +37,25 @@ void InitSelectPage(){
 	slide = Sound::create("Sounds/slide_low.mp3");
 
 	song_index = 0;
+	key_block = false;
 
 	select_page->setOnKeyboardCallback([&](ScenePtr scene, KeyCode key, bool pressed)->bool {
 		if (key == KeyCode::KEY_F) {
-			if (pressed)
+			if (!key_block && pressed)
 				Slide(LEFT);
 		}
 		if (key == KeyCode::KEY_J) {
-			if (pressed)
+			if (!key_block && pressed)
 				Slide(RIGHT);
 		}
 		if (key == KeyCode::KEY_SPACE) {
-			if (pressed) {
+			if (!key_block && pressed) {
+				key_block = true;
 				songs[song_index].Stop();
 				InGame();
 			}
 		}
-		if (key == KeyCode::KEY_BACKSPACE) {
+		if (!key_block && key == KeyCode::KEY_BACKSPACE) {
 			endGame();
 		}
 
@@ -123,4 +125,5 @@ void Slide(char dir) {
 void SongSelect() {
 	songs[song_index].Play(true);
 	select_page->enter();
+	key_block = false;
 }

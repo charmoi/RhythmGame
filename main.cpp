@@ -1,4 +1,8 @@
+#define _CRTDBG_MAP_ALLOC
+
 #include <bangtal>
+#include <stdlib.h>
+#include <crtdbg.h>
 
 using namespace bangtal;
 using namespace std;
@@ -62,6 +66,8 @@ int main() {
 	InitInGame();
 	InitSelectPage();
 	Opening();
+
+	_CrtDumpMemoryLeaks();
 
 	return 0;
 }
