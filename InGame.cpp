@@ -21,11 +21,11 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 	map >> lines;
 	map >> buf;
 	map >> split;
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 7; i++) {
 		map >> buf;
 	}
 
-	note_map = make_unique<bool[]>(lines * 5); // lines: 행수 * 5: key 개수
+	note_map = make_unique<bool[]>(lines * 4); // lines: 행수 * 4: key 개수
 
 	int check_note; // 노트 확인 버퍼
 	int count1 = 0;
@@ -34,15 +34,15 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 		map >> buf;
 		map >> buf;
 		map >> buf;
-		for (int j = 0; j < 5; j++) {
+		for (int j = 0; j < 4; j++) {
 			map >> check_note;
 			if (check_note == 0) {
 				count0++;
-				note_map[i * 5 + j] = false;
+				note_map[i * 4 + j] = false;
 			}
 			else if (check_note == 1) {
 				count1++;
-				note_map[i * 5 + j] = true;
+				note_map[i * 4 + j] = true;
 			}
 			else {
 				cout << "\nInvalid Note Value: Check the note map file at line: " << i << ", col: " << j << endl;
@@ -58,15 +58,15 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 
 bool NoteJudge(int press_time, int start_time) {
 	int diff_abs = abs(press_time - (start_time + delay));	// delay: 노트가 출발 지점(0)부터 judgeline(680)까지 도달하는 데 소요되는 시간(ms)
-	if (diff_abs < 20) {
+	if (diff_abs < 25) {
 		score.Add(judge.PerfectInc()); // ***콤보 보너스 추가하기!!!
 		return true;
 	}
-	else if (diff_abs < 40) {
+	else if (diff_abs < 35) {
 		score.Add(judge.GreatInc());
 		return true;
 	}
-	else if (diff_abs < 85) {
+	else if (diff_abs < 60) {
 		score.Add(judge.GoodInc());
 		return true;
 	}
@@ -102,10 +102,6 @@ void SetKeyboard() {
 			pressed_time[F] = ms_count;
 			KeyAction(F, pressed, pressed_time[F]);
 			break;
-		case KeyCode::KEY_SPACE:
-			pressed_time[SP] = ms_count;
-			KeyAction(SP, pressed, pressed_time[SP]);
-			break;
 		case KeyCode::KEY_J:
 			pressed_time[J] = ms_count;
 			KeyAction(J, pressed, pressed_time[J]);
@@ -114,9 +110,9 @@ void SetKeyboard() {
 			pressed_time[K] = ms_count;
 			KeyAction(K, pressed, pressed_time[K]);
 			break;
-		case KeyCode::KEY_ESCAPE:
+		case KeyCode::KEY_BACKSPACE:
 			if (pressed) {
-
+				// 나가기
 			}
 			break;
 		case KeyCode::KEY_ENTER:
@@ -139,23 +135,20 @@ void SetKeyboard() {
 
 void InitInGame() {
 	ingame_page = Scene::create("게임 플레이", "Images/ingame_bg.png");
-	keylight[D] = Object::create("Images/keylight_blue.png", ingame_page, 206, Y(704));
-	keylight[F] = Object::create("Images/keylight_green.png", ingame_page, 294, Y(704));
-	keylight[SP] = Object::create("Images/keylight_yellow.png", ingame_page, 382, Y(704));
-	keylight[J] = Object::create("Images/keylight_green.png", ingame_page, 469, Y(704));
-	keylight[K] = Object::create("Images/keylight_blue.png", ingame_page, 557, Y(704));
-	for (int i = 0; i < 5; i++)
+	keylight[D] = Object::create("Images/note1_light.png", ingame_page, 294, Y(704));
+	keylight[F] = Object::create("Images/note2_light.png", ingame_page, 382, Y(704));
+	keylight[J] = Object::create("Images/note3_light.png", ingame_page, 469, Y(704));
+	keylight[K] = Object::create("Images/note4_light.png", ingame_page, 557, Y(704));
+	for (int i = 0; i < 4; i++)
 		keylight[i]->hide();
 	for (int i = 0; i < IMG_POOL; i++) {
-		note_img[D][i].Create("Images/note3.png", ingame_page, 221, 720);
-		note_img[F][i].Create("Images/note2.png", ingame_page, 309, 720);
-		note_img[SP][i].Create("Images/note1.png", ingame_page, 396, 720);
-		note_img[J][i].Create("Images/note2.png", ingame_page, 484, 720);
-		note_img[K][i].Create("Images/note3.png", ingame_page, 572, 720);
+		note_img[D][i].Create("Images/note1.png", ingame_page, 309, 720);
+		note_img[F][i].Create("Images/note2.png", ingame_page, 396, 720);
+		note_img[J][i].Create("Images/note3.png", ingame_page, 484, 720);
+		note_img[K][i].Create("Images/note4.png", ingame_page, 572, 720);
 	}
 
 	console = Object::create(songs[0].cs, ingame_page, 0, 0);	// tutorial 이미지로 임시 설정
-	inst = Object::create("Images/ingame_inst.png", ingame_page, 967, Y(689));
 
 	string temp[10];
 	char buf[20];
@@ -163,17 +156,17 @@ void InitInGame() {
 		sprintf_s(buf, "Images/%d.png", i);
 		temp[i] = buf;
 	}
-	score.Create(temp, 16, ingame_page, 141, Y(98), 6);
+	score.Create(temp, 16, ingame_page, 227, Y(98), 6);
 
 	for (int i = 0; i < 10; i++) {
 		sprintf_s(buf, "Images/combo_%d.png", i);
 		temp[i] = buf;
 	}
-	combo.Create(temp, 34, ingame_page, 126, Y(204), 3);
+	combo.Create(temp, 34, ingame_page, 212, Y(204), 3);
 	combo.Hide();
 
 	string img[4] = { "Images/miss.png", "Images/good.png", "Images/great.png", "Images/perfect.png" };
-	judge.Create(img, ingame_page, 28, Y(220));
+	judge.Create(img, ingame_page, 113, Y(220));
 
 	SetKeyboard();
 }
@@ -185,8 +178,8 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 	}
 
 	if (!lastLine && ms_index == 0) {					// bpmTosec 단위로 map 배열 검사
-		for (int i = 0; i < 5; i++) {					// 1회 검사에 5개씩 읽기; 5키
-			if (note_map[line_index * 5 + i]) {
+		for (int i = 0; i < 4; i++) {					// 1회 검사에 5개씩 읽기; 5키
+			if (note_map[line_index * 4 + i]) {
 				note_move[i][img_index[i]] = true;
 				note_time[i][img_index[i]] = ms_count;	// note 시작 시간 기록
 				if (++img_index[i] == IMG_POOL) {		// 각 키별로 IMG_POOL만큼의 이미지를 사이클로 돌아가며 사용
@@ -197,7 +190,7 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 		line_index++;									// 다음 검사 시, note_map의 다음 행 읽기
 	}
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < IMG_POOL; j++) {
 			if (note_move[i][j]) {
 				note_img[i][j].Drop(ingame_page, speed);
@@ -216,7 +209,7 @@ VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
 
 	if (line_index == lines) {							// 총 라인 수에 도달하면 렌더링 종료 프로세스 시작
 		lastLine = true;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < IMG_POOL; j++) {
 				if (note_img[i][j].y == 0) {			// 모든 노트 이미지가 정위치에 돌아갈 때까지 기다림
 					safeEnd = true;					// 종료 키 (타이머 소멸 함수) 작동 가능
@@ -239,7 +232,7 @@ void ResetInGame() {
 	score.Show();
 	combo.Reset();
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 4; i++) {
 		img_index[i] = 0;
 		time_index[i] = 0;
 		for (int j = 0; j < IMG_POOL; j++) {
