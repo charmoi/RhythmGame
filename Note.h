@@ -23,5 +23,5 @@ public:
 	// y좌표로 이동
 	void ReturnStart(ScenePtr& scene);
 
-	friend VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired);
+	friend VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer);
 };

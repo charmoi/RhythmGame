@@ -1,12 +1,16 @@
 #define _CRTDBG_MAP_ALLOC
 
 #include <bangtal>
+#include <iostream>
 #include <stdlib.h>
 #include <crtdbg.h>
+#include <Windows.h>
 
 using namespace bangtal;
 using namespace std;
 
+extern PTP_TIMER pTimer;
+extern bool timerDeleted;
 ScenePtr start_page = Scene::create("시작", "Images/startpage.png");
 
 void InitSelectPage();	// 곡 선택 페이지 생성
@@ -63,11 +67,20 @@ int main() {
 	setGameOption(GameOption::GAME_OPTION_INVENTORY_BUTTON, false);
 	setGameOption(GameOption::GAME_OPTION_MESSAGE_BOX_BUTTON, false);
 	setGameOption(GameOption::GAME_OPTION_ROOM_TITLE, false);
+
+	timerDeleted = true;
+
 	InitInGame();
 	InitSelectPage();
 	Opening();
 
 	_CrtDumpMemoryLeaks();
+
+	if (!timerDeleted) {
+		WaitForThreadpoolTimerCallbacks(pTimer, true);
+		CloseThreadpoolTimer(pTimer);
+		cout << endl << "Timer deleted" << endl;
+	}
 
 	return 0;
 }

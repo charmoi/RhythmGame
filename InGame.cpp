@@ -1,7 +1,7 @@
 #include "InGame.h"
 #include "Others.h"
 #include <Windows.h>
-#include <threadpoollegacyapiset.h>
+//#include <threadpoollegacyapiset.h>
 
 bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 	note_map.reset();
@@ -113,24 +113,32 @@ void SetKeyboard() {
 		case KeyCode::KEY_BACKSPACE:
 			if (!pressed) {
 				songs[song_index].Stop();
-				if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
-					cout << "\nTimer deleted" << endl;
-				}
-				else {
-					cout << "\nTimer deletion failed" << endl;
-				}
+				//if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
+				//	cout << "\nTimer deleted" << endl;
+				//}
+				//else {
+				//	cout << "\nTimer deletion failed" << endl;
+				//}
+				WaitForThreadpoolTimerCallbacks(pTimer, true);
+				CloseThreadpoolTimer(pTimer);
+				cout << endl << "Timer deleted" << endl;
+				timerDeleted = true;
 				SongSelect();
 			}
 			break;
 		case KeyCode::KEY_ENTER:
 			if (pressed) {
 				if (safeEnd) {
-					if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
-						cout << "\nTimer deleted" << endl;
-					}
-					else {
-						cout << "\nTimer deletion failed" << endl;
-					}
+					//if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
+					//	cout << "\nTimer deleted" << endl;
+					//}
+					//else {
+					//	cout << "\nTimer deletion failed" << endl;
+					//}
+					WaitForThreadpoolTimerCallbacks(pTimer, true);
+					CloseThreadpoolTimer(pTimer);
+					cout << endl << "Timer deleted" << endl;
+					timerDeleted = true;
 				}
 			}
 			break;
@@ -180,9 +188,8 @@ void InitInGame() {
 	//timerQueue = CreateTimerQueue();
 }
 
-VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired) {
+VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer) {
 	if (!songPlaying && ms_count == delay) {
-		ingame_page->enter();
 		songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
 		songPlaying = true;						// 최초 재생 이후, 재생 반복 방지
 	}
@@ -261,6 +268,7 @@ void ResetInGame() {
 	ms_count = 1;									// ms_count는 1ms부터 시작
 	speed = songs[song_index].speed;				// delay 값이 정수로 나누어떨어지도록 680의 약수로 설정
 	delay = 680 / speed;							// 680: 노트 출발지점부터 판정선까지의 이동거리
+	timerDeleted = false;
 	judge.Reset();
 }
 
@@ -273,5 +281,21 @@ void InGame() {
 		endGame();
 	}
 	
-	CreateTimerQueueTimer(&frameTimer, NULL, frameCallback, NULL, 100, 1, WT_EXECUTEDEFAULT);
+	pTimer = CreateThreadpoolTimer(frameCallback, NULL, NULL);
+
+	ULARGE_INTEGER ulStartTime;
+	ulStartTime.QuadPart = (LONGLONG)-(10000000);
+	ftStartTime.dwHighDateTime = ulStartTime.HighPart;
+	ftStartTime.dwLowDateTime = ulStartTime.LowPart;
+
+	ingame_page->enter();
+	SetThreadpoolTimer(pTimer, &ftStartTime, 1, 0);
+	cout << endl << "Timer Start" << endl;
+
+//	DWORD duetime = 100;
+//	DWORD period = 1;
+//	if (CreateTimerQueueTimer(&frameTimer, NULL, frameCallback, NULL, duetime, period, WT_EXECUTEDEFAULT)) {
+//		ingame_page->enter();
+//		cout << endl << GetThreadPriority(frameTimer) << endl;
+//	}
 }
