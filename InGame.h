@@ -42,7 +42,10 @@ unique_ptr<bool[]> note_map;
 int bpm;			// 노래의 bpm
 int lines;			// 맵의 행 수
 int split;			// 한 박을 몇 개로 쪼갰는가
-char speed = 1;		// 프레임 반복마다 노트 이미지가 이동하는 픽셀거리
+char speed;			// 프레임 반복마다 노트 이미지가 이동하는 픽셀거리
+
+int comboMax;		
+double bonus;		// 콤보 수에 따라 점수에 가산되는 보너스
 
 //---------------Timer 관련 변수-----------------
 
@@ -73,6 +76,8 @@ int pressed_time[4];			// 키 누른 시간 저장용
 bool CreateMap(int& index, unique_ptr<bool[]>& note_map);
 // 판정 함수; 누른 시각과 노트 시작한 시각을 비교
 bool NoteJudge(int press_time, int start_time);
+// 콤보 보너스 설정
+void SetComboBonus(int combo);
 // 키보드 입력시 실행 함수
 void KeyAction(char key, bool& pressed, int pressed_t);
 // 키보드 입력 콜백 세팅

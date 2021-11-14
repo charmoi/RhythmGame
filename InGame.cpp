@@ -60,19 +60,38 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 bool NoteJudge(int press_time, int start_time) {
 	int diff_abs = abs(press_time - (start_time + delay));	// delay: 노트가 출발 지점(0)부터 judgeline(680)까지 도달하는 데 소요되는 시간(ms)
 	if (diff_abs < 25) {
-		score.Add(judge.PerfectInc()); // ***콤보 보너스 추가하기!!!
+		score.Add(judge.PerfectInc() * bonus); // ***콤보 보너스 추가하기!!!
 		return true;
 	}
-	else if (diff_abs < 35) {
-		score.Add(judge.GreatInc());
+	else if (diff_abs < 38) {
+		score.Add(judge.GreatInc() * bonus);
 		return true;
 	}
-	else if (diff_abs < 60) {
-		score.Add(judge.GoodInc());
+	else if (diff_abs < 70) {
+		score.Add(judge.GoodInc() * bonus);
 		return true;
 	}
 	
 	return false;	// miss 판정은 timer 콜백에 있음
+}
+
+void SetComboBonus(int combo) {
+	if (combo < 20)
+		bonus = 1;
+	else if (combo < 50)
+		bonus = 1.1;
+	else if (combo < 100)
+		bonus = 1.15;
+	else if (combo < 200)
+		bonus = 1.2;
+	else if (combo < 300)
+		bonus = 1.3;
+	else if (combo < 400)
+		bonus = 1.4;
+	else if (combo < 500)
+		bonus = 1.5;
+	else
+		bonus = 1.6;
 }
 
 void KeyAction(char key, bool& pressed, int pressed_t) {
@@ -83,7 +102,7 @@ void KeyAction(char key, bool& pressed, int pressed_t) {
 			if (++time_index[key] == IMG_POOL) {						// IMG_POOL만큼의 인덱스를 사이클로 돌아가며 순차적으로 읽음
 				time_index[key] = 0;
 			}
-			combo.Increase();
+			SetComboBonus(combo.Increase());
 			hp.Increase();
 		}
 		keylight[key]->show();
@@ -210,16 +229,19 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 		for (int j = 0; j < IMG_POOL; j++) {
 			if (note_move[i][j]) {
 				note_img[i][j].Drop(ingame_page, speed);
-				if (note_img[i][j].y < -33) {
+				if (note_img[i][j].y < -50) {
 					if (++time_index[i] == IMG_POOL) {	// 노트 시작 시간 인덱스 증가; 다음 떨어지는 노트의 시간 읽기
 						time_index[i] = 0;
 					}
 					note_move[i][j] = false;
 					note_img[i][j].ReturnStart(ingame_page);
+					if (combo.GetScore() > comboMax) {	// 최대 콤보 수 저장
+						comboMax = combo.GetScore();
+					}
 					combo.Reset();
 					judge.MissInc();
 					if (!hp.Decrease()) {
-						if (!safeEnd) {				// 중복 호출 방지
+						if (!safeEnd) {					// 중복 호출 방지
 							safeEnd = true;
 							gameover->show();
 							songs[song_index].Stop();
@@ -288,6 +310,7 @@ void ResetInGame() {
 	gameover->hide();
 	gameclear->hide();
 	press_enter->hide();
+	comboMax = 0;
 }
 
 void InGame() {

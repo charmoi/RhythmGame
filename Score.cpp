@@ -86,7 +86,7 @@ void Score::Reset() {
 	Hide();
 }
 
-void Score::Increase() {
+int Score::Increase() {
 	if (!shown) {
 		Show();
 	}
@@ -101,6 +101,7 @@ void Score::Increase() {
 			p[i]->setImage(img[0]);
 		}
 	}
+	return score;
 }
 
 int Score::GetScore() {

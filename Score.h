@@ -29,6 +29,6 @@ public:
 	// 점수 0으로 리셋
 	void Reset();
 	// 점수 1증가
-	void Increase();
+	int Increase();
 	int GetScore();
 };
