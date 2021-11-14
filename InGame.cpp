@@ -1,7 +1,8 @@
 #include "InGame.h"
 #include "Others.h"
 #include <Windows.h>
-//#include <threadpoollegacyapiset.h>
+
+#pragma comment(lib, "winmm.lib")
 
 bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 	note_map.reset();
@@ -122,6 +123,13 @@ void SetKeyboard() {
 				WaitForThreadpoolTimerCallbacks(pTimer, true);
 				CloseThreadpoolTimer(pTimer);
 				cout << endl << "Timer deleted" << endl;
+				MMRESULT result = timeEndPeriod(uPeriod);
+				if (result == TIMERR_NOERROR) {
+					cout << endl << "Timer resolution restored" << endl;
+				}
+				else {
+					cout << endl << "Timer resolution restoration failed: " << result << endl;
+				}
 				timerDeleted = true;
 				SongSelect();
 			}
@@ -138,6 +146,13 @@ void SetKeyboard() {
 					WaitForThreadpoolTimerCallbacks(pTimer, true);
 					CloseThreadpoolTimer(pTimer);
 					cout << endl << "Timer deleted" << endl;
+					MMRESULT result = timeEndPeriod(uPeriod);
+					if (result == TIMERR_NOERROR) {
+						cout << endl << "Timer resolution restored" << endl;
+					}
+					else {
+						cout << endl << "Timer resolution restoration failed: " << result << endl;
+					}
 					timerDeleted = true;
 				}
 			}
@@ -229,7 +244,7 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < IMG_POOL; j++) {
 				if (note_img[i][j].y == 0) {			// 모든 노트 이미지가 정위치에 돌아갈 때까지 기다림
-					safeEnd = true;					// 종료 키 (타이머 소멸 함수) 작동 가능
+					safeEnd = true;						// 종료 키 (타이머 소멸 함수) 작동 가능
 				}
 			}
 		}
@@ -289,6 +304,13 @@ void InGame() {
 	ftStartTime.dwLowDateTime = ulStartTime.LowPart;
 
 	ingame_page->enter();
+	MMRESULT result = timeBeginPeriod(1);
+	if (result == TIMERR_NOERROR) {
+		cout << endl << "Timer resolution set" << endl;
+	}
+	else {
+		cout << endl << "Timer resolution failed: " << result << endl;
+	}
 	SetThreadpoolTimer(pTimer, &ftStartTime, 1, 0);
 	cout << endl << "Timer Start" << endl;
 

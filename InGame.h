@@ -42,8 +42,9 @@ char speed = 1;		// 프레임 반복마다 노트 이미지가 이동하는 픽셀거리
 
 //HANDLE timerQueue;
 //HANDLE frameTimer;
-PTP_TIMER pTimer;
-FILETIME ftStartTime;
+PTP_TIMER pTimer;				// 타이머 포인터
+FILETIME ftStartTime;			// 타이머 duetime 계산용
+UINT uPeriod = 1;				// 타이머 해상도 1ms
 bool timerDeleted;
 bool safeEnd;					// 모든 노트가 제자리로 돌아감; true면 타이머 delete 가능
 bool lastLine;					// 마지막 줄 확인; true면 더이상 맵을 읽지 않음
