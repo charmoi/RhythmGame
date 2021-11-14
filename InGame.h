@@ -40,23 +40,22 @@ char speed = 1;		// 프레임 반복마다 노트 이미지가 이동하는 픽셀거리
 
 //---------------Timer 관련 변수-----------------
 
-//HANDLE timerQueue;
-//HANDLE frameTimer;
-PTP_TIMER pTimer;				// 타이머 포인터
+PTP_TIMER pFTimer;				// 프레임 타이머 포인터
+PTP_TIMER pBTimer;				// 비트 타이머 포인터
 FILETIME ftStartTime;			// 타이머 duetime 계산용
-UINT uPeriod = 1;				// 타이머 해상도 1ms
+UINT uFres = 20;				// 프레임 해상도 20ms
+UINT bpmTosec;					// bpm과 split을 토대로 노래 최소 박자를 ms 단위로 변환
 bool timerDeleted;
 bool safeEnd;					// 모든 노트가 제자리로 돌아감; true면 타이머 delete 가능
 bool lastLine;					// 마지막 줄 확인; true면 더이상 맵을 읽지 않음
 
-int bpmTosec;					// bpm과 split을 토대로 노래 최소 박자를 ms 단위로 변환
 bool note_move[4][IMG_POOL];	// 5가지 key에 대해, note_img를 움직일지 말지 저장
 char img_index[4];				// note_move[][i]의 i 인덱스 값을 저장
 int line_index;					// 타이머 콜백에서 note_map 배열의 각 행을 읽기 위한 인덱스
 bool songPlaying;				// 노래 최초 재생 이후 재생 중첩 방지용
-int ms_index;					// 1ms 타이머용 인덱스
-int ms_count;					// 전체 흐른 시간 측정용
-int delay;						// 노래 시작 타이밍 맞추기 & 노트 판정 시간 계산용
+int frame_count;				// 프레임 카운터; 노래 시작 타이밍 맞추기
+int trigger_frame;				// 노래가 시작될 프레임; 노트 출발 지점부터 도착지점까지 필요한 프레임 수
+int delay;						// 노트 판정 시간 계산용; 프레임 해상도 * trigger_frame
 int note_time[4][IMG_POOL];		// 노트가 출발하는 시점의 ms_count를 복사, delay만큼 더해서 계산
 char time_index[4];				// note_time을 순서대로 읽기 위한 인덱스
 int pressed_time[4];			// 키 누른 시간 저장용
@@ -73,7 +72,7 @@ void SetKeyboard();
 // 게임 플레이 페이지 빌드
 void InitInGame();
 // 렌더링용 타이머 콜백 함수
-VOID CALLBACK frameCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired);
+VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer);
 // 게임 페이지 리셋
 void ResetInGame();
 // 게임 플레이 페이지로 이동

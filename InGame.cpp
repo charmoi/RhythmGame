@@ -96,40 +96,30 @@ void SetKeyboard() {
 	ingame_page->setOnKeyboardCallback([&](ScenePtr scene, KeyCode key, bool pressed)->bool {
 		switch (key) {
 		case KeyCode::KEY_D:
-			pressed_time[D] = ms_count;
+			pressed_time[D] = timeGetTime();
 			KeyAction(D, pressed, pressed_time[D]);
 			break;
 		case KeyCode::KEY_F:
-			pressed_time[F] = ms_count;
+			pressed_time[F] = timeGetTime();
 			KeyAction(F, pressed, pressed_time[F]);
 			break;
 		case KeyCode::KEY_J:
-			pressed_time[J] = ms_count;
+			pressed_time[J] = timeGetTime();
 			KeyAction(J, pressed, pressed_time[J]);
 			break;
 		case KeyCode::KEY_K:
-			pressed_time[K] = ms_count;
+			pressed_time[K] = timeGetTime();
 			KeyAction(K, pressed, pressed_time[K]);
 			break;
 		case KeyCode::KEY_BACKSPACE:
 			if (!pressed) {
 				songs[song_index].Stop();
-				//if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
-				//	cout << "\nTimer deleted" << endl;
-				//}
-				//else {
-				//	cout << "\nTimer deletion failed" << endl;
-				//}
-				WaitForThreadpoolTimerCallbacks(pTimer, true);
-				CloseThreadpoolTimer(pTimer);
+
+				WaitForThreadpoolTimerCallbacks(pFTimer, true);
+				WaitForThreadpoolTimerCallbacks(pBTimer, true);
+				CloseThreadpoolTimer(pFTimer);
+				CloseThreadpoolTimer(pBTimer);
 				cout << endl << "Timer deleted" << endl;
-				MMRESULT result = timeEndPeriod(uPeriod);
-				if (result == TIMERR_NOERROR) {
-					cout << endl << "Timer resolution restored" << endl;
-				}
-				else {
-					cout << endl << "Timer resolution restoration failed: " << result << endl;
-				}
 				timerDeleted = true;
 				SongSelect();
 			}
@@ -137,22 +127,11 @@ void SetKeyboard() {
 		case KeyCode::KEY_ENTER:
 			if (pressed) {
 				if (safeEnd) {
-					//if (DeleteTimerQueueTimer(NULL, frameTimer, INVALID_HANDLE_VALUE)) {
-					//	cout << "\nTimer deleted" << endl;
-					//}
-					//else {
-					//	cout << "\nTimer deletion failed" << endl;
-					//}
-					WaitForThreadpoolTimerCallbacks(pTimer, true);
-					CloseThreadpoolTimer(pTimer);
+					WaitForThreadpoolTimerCallbacks(pFTimer, true);
+					WaitForThreadpoolTimerCallbacks(pBTimer, true);
+					CloseThreadpoolTimer(pFTimer);
+					CloseThreadpoolTimer(pBTimer);
 					cout << endl << "Timer deleted" << endl;
-					MMRESULT result = timeEndPeriod(uPeriod);
-					if (result == TIMERR_NOERROR) {
-						cout << endl << "Timer resolution restored" << endl;
-					}
-					else {
-						cout << endl << "Timer resolution restoration failed: " << result << endl;
-					}
 					timerDeleted = true;
 				}
 			}
@@ -199,27 +178,14 @@ void InitInGame() {
 	judge.Create(img, ingame_page, 113, Y(220));
 
 	SetKeyboard();
-
-	//timerQueue = CreateTimerQueue();
 }
 
 VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer) {
-	if (!songPlaying && ms_count == delay) {
-		songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
-		songPlaying = true;						// 최초 재생 이후, 재생 반복 방지
-	}
-
-	if (!lastLine && ms_index == 0) {					// bpmTosec 단위로 map 배열 검사
-		for (int i = 0; i < 4; i++) {					// 1회 검사에 5개씩 읽기; 5키
-			if (note_map[line_index * 4 + i]) {
-				note_move[i][img_index[i]] = true;
-				note_time[i][img_index[i]] = ms_count;	// note 시작 시간 기록
-				if (++img_index[i] == IMG_POOL) {		// 각 키별로 IMG_POOL만큼의 이미지를 사이클로 돌아가며 사용
-					img_index[i] = 0;
-				}
-			}
+	if (!songPlaying) {
+		if (frame_count++ >= trigger_frame) {
+			songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
+			songPlaying = true;						// 최초 재생 이후, 재생 반복 방지
 		}
-		line_index++;									// 다음 검사 시, note_map의 다음 행 읽기
 	}
 
 	for (int i = 0; i < 4; i++) {
@@ -239,23 +205,33 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 		}
 	}
 
-	if (line_index == lines) {							// 총 라인 수에 도달하면 렌더링 종료 프로세스 시작
-		lastLine = true;
+	if (lastLine) {										// 총 라인 수에 도달하면 렌더링 종료 프로세스 시작
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < IMG_POOL; j++) {
-				if (note_img[i][j].y == 0) {			// 모든 노트 이미지가 정위치에 돌아갈 때까지 기다림
-					safeEnd = true;						// 종료 키 (타이머 소멸 함수) 작동 가능
+				if (note_img[i][j].y != 0) {			// 모든 노트 이미지가 정위치에 돌아갈 때까지 기다림
+					return;
 				}
 			}
 		}
-		return;
+		safeEnd = true;									// 종료 키 (타이머 소멸 함수) 작동 가능
 	}
+}
 
-	if (++ms_index == bpmTosec) {
-		ms_index = 0;
+VOID CALLBACK beatCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer) {
+	if (!lastLine) {									// bpmTosec 단위로 map 배열 검사
+		for (int i = 0; i < 4; i++) {					// 1회 검사에 5개씩 읽기; 5키
+			if (note_map[line_index * 4 + i]) {
+				note_move[i][img_index[i]] = true;
+				note_time[i][img_index[i]] = timeGetTime();	// note 시작 시간 기록
+				if (++img_index[i] == IMG_POOL) {		// 각 키별로 IMG_POOL만큼의 이미지를 사이클로 돌아가며 사용
+					img_index[i] = 0;
+				}
+			}
+		}
+		if (++line_index == lines) {					// 다음 검사 시, note_map의 다음 행 읽기
+			lastLine = true;
+		}
 	}
-
-	ms_count++;
 }
 
 void ResetInGame() {
@@ -277,12 +253,12 @@ void ResetInGame() {
 	bpmTosec = 60 * 1000 / bpm / split;	// bpmTosec식 = 60초 * 1000(ms변환) / bpm / split(한 박을 몇개로 쪼갰는가)
 	songPlaying = false;
 	line_index = 0;
-	ms_index = 0;									// ms_index는 0부터 시작
 	lastLine = false;
 	safeEnd = false;
-	ms_count = 1;									// ms_count는 1ms부터 시작
-	speed = songs[song_index].speed;				// delay 값이 정수로 나누어떨어지도록 680의 약수로 설정
-	delay = 680 / speed;							// 680: 노트 출발지점부터 판정선까지의 이동거리
+	frame_count = 1;								// frame_count는 1부터 시작
+	speed = songs[song_index].speed;				// trigger_frame 값이 정수로 나누어떨어지도록 680의 약수로 설정
+	trigger_frame = 680 / speed;					
+	delay = uFres * trigger_frame;					// 노트 출발부터 도착까지 걸리는 시간 (ms단위)
 	timerDeleted = false;
 	judge.Reset();
 }
@@ -296,7 +272,8 @@ void InGame() {
 		endGame();
 	}
 	
-	pTimer = CreateThreadpoolTimer(frameCallback, NULL, NULL);
+	pFTimer = CreateThreadpoolTimer(frameCallback, NULL, NULL);
+	pBTimer = CreateThreadpoolTimer(beatCallback, NULL, NULL);
 
 	ULARGE_INTEGER ulStartTime;
 	ulStartTime.QuadPart = (LONGLONG)-(10000000);
@@ -304,20 +281,8 @@ void InGame() {
 	ftStartTime.dwLowDateTime = ulStartTime.LowPart;
 
 	ingame_page->enter();
-	MMRESULT result = timeBeginPeriod(1);
-	if (result == TIMERR_NOERROR) {
-		cout << endl << "Timer resolution set" << endl;
-	}
-	else {
-		cout << endl << "Timer resolution failed: " << result << endl;
-	}
-	SetThreadpoolTimer(pTimer, &ftStartTime, 1, 0);
+	
+	SetThreadpoolTimer(pFTimer, &ftStartTime, uFres, 0);
+	SetThreadpoolTimer(pBTimer, &ftStartTime, bpmTosec, 0);
 	cout << endl << "Timer Start" << endl;
-
-//	DWORD duetime = 100;
-//	DWORD period = 1;
-//	if (CreateTimerQueueTimer(&frameTimer, NULL, frameCallback, NULL, duetime, period, WT_EXECUTEDEFAULT)) {
-//		ingame_page->enter();
-//		cout << endl << GetThreadPriority(frameTimer) << endl;
-//	}
 }

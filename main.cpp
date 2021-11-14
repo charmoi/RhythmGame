@@ -6,13 +6,11 @@
 #include <crtdbg.h>
 #include <Windows.h>
 
-#pragma comment(lib, "winmm.lib")
-
 using namespace bangtal;
 using namespace std;
 
-extern UINT uPeriod;
-extern PTP_TIMER pTimer;
+extern PTP_TIMER pFTimer;
+extern PTP_TIMER pBTimer;
 extern bool timerDeleted;
 ScenePtr start_page = Scene::create("Ω√¿€", "Images/startpage.png");
 
@@ -80,16 +78,11 @@ int main() {
 	_CrtDumpMemoryLeaks();
 
 	if (!timerDeleted) {
-		WaitForThreadpoolTimerCallbacks(pTimer, true);
-		CloseThreadpoolTimer(pTimer);
+		WaitForThreadpoolTimerCallbacks(pFTimer, true);
+		WaitForThreadpoolTimerCallbacks(pBTimer, true);
+		CloseThreadpoolTimer(pFTimer);
+		CloseThreadpoolTimer(pBTimer);
 		cout << endl << "Timer deleted" << endl;
-		MMRESULT result = timeEndPeriod(uPeriod);
-		if (result == TIMERR_NOERROR) {
-			cout << endl << "Timer resolution restored" << endl;
-		}
-		else {
-			cout << endl << "Timer resolution restoration failed: " << result << endl;
-		}
 	}
 
 	return 0;
