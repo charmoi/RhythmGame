@@ -54,8 +54,8 @@ void HP::Increase() {
 bool HP::Decrease() {
 	int pre_hp = hp;
 	hp -= HP_LOSS;
-	if (hp <= 0) {
-		hp = 0;
+	if (hp < 0) {
+		hp = -1;
 		HP::Hide();
 		return false;			// 게임 종료 시그널; 주어진 HP 모두 소진
 	}

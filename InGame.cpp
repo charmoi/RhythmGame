@@ -173,8 +173,10 @@ void InitInGame() {
 	hp.SetColor("Images/life3.png", 14, 21);
 	hp.SetColor("Images/life4.png", 22, 26);
 
-	showResult = Object::create("Images/gameover.png", ingame_page, 278, Y(701));
-	showResult->hide();
+	gameclear = Object::create("Images/songclear.png", ingame_page, 278, Y(701));
+	gameclear->hide();
+	gameover = Object::create("Images/gameover.png", ingame_page, 278, Y(701));
+	gameover->hide();
 	press_enter = Object::create("Images/press_enter_mini.png", ingame_page, 332, Y(496));
 	press_enter->hide();
 
@@ -183,7 +185,7 @@ void InitInGame() {
 
 VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer) {
 	if (safeEnd) {						// 게임 종료 플래그
-		if (frame_count % 20 == 0) {	// 20프레임(20 * 20ms = 0.4초)마다 깜빡임 효과
+		if (frame_count % 30 == 0) {	// 30프레임(30 * 20ms = 0.6초)마다 깜빡임 효과
 			if (!img_shown) {
 				press_enter->show();
 				img_shown = true;
@@ -217,28 +219,25 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 					combo.Reset();
 					judge.MissInc();
 					if (!hp.Decrease()) {
-						showResult->setImage("Images/gameover.png");
-						showResult->show();
-						songs[song_index].Stop();
-						safeEnd = true;
+						if (!safeEnd) {				// 중복 호출 방지
+							safeEnd = true;
+							gameover->show();
+							songs[song_index].Stop();
+						}
 					}
 				}
 			}
 		}
 	}
-
-	if (lastLine) {										// 총 라인 수에 도달하면 렌더링 종료 프로세스 시작
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < IMG_POOL; j++) {
-				if (note_img[i][j].y != 0) {			// 모든 노트 이미지가 정위치에 돌아갈 때까지 기다림
-					return;
-				}
+	if (lastLine) {
+		if (frame_count++ > trigger_frame * 2 + 50) {		// 처음 시작할 때 frame count 한 거 + 마지막 노트 출발부터 판정선 도달까지 count + 50프레임 (20ms*50 = 1초)
+			if (!safeEnd) {									// 중복 호출 방지
+				safeEnd = true;								// 종료 키 (타이머 소멸 함수) 작동 가능
+				gameclear->show();
 			}
 		}
-		showResult->setImage("Images/songclear.png");
-		showResult->show();
-		safeEnd = true;									// 종료 키 (타이머 소멸 함수) 작동 가능
 	}
+
 }
 
 VOID CALLBACK beatCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer) {
@@ -252,8 +251,8 @@ VOID CALLBACK beatCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TI
 				}
 			}
 		}
-		if (++line_index == lines) {					// 다음 검사 시, note_map의 다음 행 읽기
-			lastLine = true;
+		if (++line_index == lines) {						// 다음 검사 시, note_map의 다음 행 읽기
+			lastLine = true;								// 마지막 라인에 도달하면, 콜백 내부 건너뛰기
 		}
 	}
 }
@@ -286,7 +285,8 @@ void ResetInGame() {
 	timerDeleted = false;
 	judge.Reset();
 	hp.Update(HP_DEFAULT);
-	showResult->hide();
+	gameover->hide();
+	gameclear->hide();
 	press_enter->hide();
 }
 
@@ -315,11 +315,12 @@ void InGame() {
 }
 
 void ClosePlaying() {
-	WaitForThreadpoolTimerCallbacks(pFTimer, TRUE);
-	WaitForThreadpoolTimerCallbacks(pBTimer, TRUE);
-	CloseThreadpoolTimer(pFTimer);
-	CloseThreadpoolTimer(pBTimer);
-	cout << endl << "Timer deleted" << endl;
-	timerDeleted = true;
-
+	if (!timerDeleted) {
+		WaitForThreadpoolTimerCallbacks(pFTimer, TRUE);
+		WaitForThreadpoolTimerCallbacks(pBTimer, TRUE);
+		CloseThreadpoolTimer(pFTimer);
+		CloseThreadpoolTimer(pBTimer);
+		cout << endl << "Timer deleted" << endl;
+		timerDeleted = true;
+	}
 }

@@ -31,7 +31,8 @@ Score score;
 Score combo;
 Judge judge;
 HP hp;
-ObjectPtr showResult;
+ObjectPtr gameover;
+ObjectPtr gameclear;
 ObjectPtr press_enter;
 
 //---------------ingame_page의 유동 변수-----------------
