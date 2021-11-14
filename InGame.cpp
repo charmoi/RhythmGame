@@ -114,6 +114,7 @@ void SetKeyboard() {
 			break;
 		case KeyCode::KEY_BACKSPACE:
 			if (!pressed) {
+				songs[song_index].Stop();
 				ClosePlaying();
 				SongSelect();
 			}
@@ -172,10 +173,30 @@ void InitInGame() {
 	hp.SetColor("Images/life3.png", 14, 21);
 	hp.SetColor("Images/life4.png", 22, 26);
 
+	showResult = Object::create("Images/gameover.png", ingame_page, 278, Y(701));
+	showResult->hide();
+	press_enter = Object::create("Images/press_enter_mini.png", ingame_page, 332, Y(496));
+	press_enter->hide();
+
 	SetKeyboard();
 }
 
 VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer) {
+	if (safeEnd) {						// 게임 종료 플래그
+		if (frame_count % 20 == 0) {	// 20프레임(20 * 20ms = 0.4초)마다 깜빡임 효과
+			if (!img_shown) {
+				press_enter->show();
+				img_shown = true;
+			}
+			else {
+				press_enter->hide();
+				img_shown = false;
+			}
+		}
+		frame_count++;
+		return;
+	}
+
 	if (!songPlaying) {
 		if (frame_count++ >= trigger_frame) {
 			songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
@@ -196,7 +217,10 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 					combo.Reset();
 					judge.MissInc();
 					if (!hp.Decrease()) {
-						ClosePlaying();
+						showResult->setImage("Images/gameover.png");
+						showResult->show();
+						songs[song_index].Stop();
+						safeEnd = true;
 					}
 				}
 			}
@@ -211,9 +235,9 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 				}
 			}
 		}
+		showResult->setImage("Images/songclear.png");
+		showResult->show();
 		safeEnd = true;									// 종료 키 (타이머 소멸 함수) 작동 가능
-		// enter 키 누르세요 문구 표시
-		// result page 만들어지면 바로 이동하도록 수정
 	}
 }
 
@@ -261,7 +285,9 @@ void ResetInGame() {
 	delay = uFres * trigger_frame;					// 노트 출발부터 도착까지 걸리는 시간 (ms단위)
 	timerDeleted = false;
 	judge.Reset();
-	hp.Update(HP_DEFAULT);									
+	hp.Update(HP_DEFAULT);
+	showResult->hide();
+	press_enter->hide();
 }
 
 void InGame() {
@@ -289,15 +315,11 @@ void InGame() {
 }
 
 void ClosePlaying() {
-	songs[song_index].Stop();
-
-	//WaitForThreadpoolTimerCallbacks(pFTimer, TRUE);
-	//WaitForThreadpoolTimerCallbacks(pBTimer, TRUE);
-	if (!timerDeleted) {
-		CloseThreadpoolTimer(pFTimer);
-		CloseThreadpoolTimer(pBTimer);
-		cout << endl << "Timer deleted" << endl;
-		timerDeleted = true;
-	}
+	WaitForThreadpoolTimerCallbacks(pFTimer, TRUE);
+	WaitForThreadpoolTimerCallbacks(pBTimer, TRUE);
+	CloseThreadpoolTimer(pFTimer);
+	CloseThreadpoolTimer(pBTimer);
+	cout << endl << "Timer deleted" << endl;
+	timerDeleted = true;
 
 }

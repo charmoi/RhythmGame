@@ -31,6 +31,8 @@ Score score;
 Score combo;
 Judge judge;
 HP hp;
+ObjectPtr showResult;
+ObjectPtr press_enter;
 
 //---------------ingame_page의 유동 변수-----------------
 
@@ -51,6 +53,8 @@ UINT bpmTosec;					// bpm과 split을 토대로 노래 최소 박자를 ms 단위로 변환
 bool timerDeleted;
 bool safeEnd;					// 모든 노트가 제자리로 돌아감; true면 타이머 delete 가능
 bool lastLine;					// 마지막 줄 확인; true면 더이상 맵을 읽지 않음
+
+bool img_shown;					// press_enter 문구 깜빡임용
 
 bool note_move[4][IMG_POOL];	// 5가지 key에 대해, note_img를 움직일지 말지 저장
 char img_index[4];				// note_move[][i]의 i 인덱스 값을 저장
