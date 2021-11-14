@@ -139,6 +139,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameResult.cpp" />
+    <ClCompile Include="HP.cpp" />
     <ClCompile Include="InGame.cpp" />
     <ClCompile Include="Judge.cpp" />
     <ClCompile Include="main.cpp" />
@@ -148,6 +150,8 @@
     <ClCompile Include="SongSelect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameResult.h" />
+    <ClInclude Include="HP.h" />
     <ClInclude Include="InGame.h" />
     <ClInclude Include="Judge.h" />
     <ClInclude Include="Note.h" />

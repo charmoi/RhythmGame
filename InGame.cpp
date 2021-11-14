@@ -84,6 +84,7 @@ void KeyAction(char key, bool& pressed, int pressed_t) {
 				time_index[key] = 0;
 			}
 			combo.Increase();
+			hp.Increase();
 		}
 		keylight[key]->show();
 	}
@@ -113,26 +114,15 @@ void SetKeyboard() {
 			break;
 		case KeyCode::KEY_BACKSPACE:
 			if (!pressed) {
-				songs[song_index].Stop();
-
-				WaitForThreadpoolTimerCallbacks(pFTimer, true);
-				WaitForThreadpoolTimerCallbacks(pBTimer, true);
-				CloseThreadpoolTimer(pFTimer);
-				CloseThreadpoolTimer(pBTimer);
-				cout << endl << "Timer deleted" << endl;
-				timerDeleted = true;
+				ClosePlaying();
 				SongSelect();
 			}
 			break;
 		case KeyCode::KEY_ENTER:
 			if (pressed) {
 				if (safeEnd) {
-					WaitForThreadpoolTimerCallbacks(pFTimer, true);
-					WaitForThreadpoolTimerCallbacks(pBTimer, true);
-					CloseThreadpoolTimer(pFTimer);
-					CloseThreadpoolTimer(pBTimer);
-					cout << endl << "Timer deleted" << endl;
-					timerDeleted = true;
+					ClosePlaying();
+					// result 페이지 이동
 				}
 			}
 			break;
@@ -177,6 +167,11 @@ void InitInGame() {
 	string img[4] = { "Images/miss.png", "Images/good.png", "Images/great.png", "Images/perfect.png" };
 	judge.Create(img, ingame_page, 113, Y(220));
 
+	hp.Create("Images/life1.png", ingame_page, 130, Y(667));
+	hp.SetColor("Images/life2.png", 4, 13);
+	hp.SetColor("Images/life3.png", 14, 21);
+	hp.SetColor("Images/life4.png", 22, 26);
+
 	SetKeyboard();
 }
 
@@ -196,10 +191,13 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 					if (++time_index[i] == IMG_POOL) {	// 노트 시작 시간 인덱스 증가; 다음 떨어지는 노트의 시간 읽기
 						time_index[i] = 0;
 					}
-					combo.Reset();
-					judge.MissInc();
 					note_move[i][j] = false;
 					note_img[i][j].ReturnStart(ingame_page);
+					combo.Reset();
+					judge.MissInc();
+					if (!hp.Decrease()) {
+						ClosePlaying();
+					}
 				}
 			}
 		}
@@ -214,6 +212,8 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 			}
 		}
 		safeEnd = true;									// 종료 키 (타이머 소멸 함수) 작동 가능
+		// enter 키 누르세요 문구 표시
+		// result page 만들어지면 바로 이동하도록 수정
 	}
 }
 
@@ -261,6 +261,7 @@ void ResetInGame() {
 	delay = uFres * trigger_frame;					// 노트 출발부터 도착까지 걸리는 시간 (ms단위)
 	timerDeleted = false;
 	judge.Reset();
+	hp.Update(HP_DEFAULT);									
 }
 
 void InGame() {
@@ -285,4 +286,18 @@ void InGame() {
 	SetThreadpoolTimer(pFTimer, &ftStartTime, uFres, 0);
 	SetThreadpoolTimer(pBTimer, &ftStartTime, bpmTosec, 0);
 	cout << endl << "Timer Start" << endl;
+}
+
+void ClosePlaying() {
+	songs[song_index].Stop();
+
+	//WaitForThreadpoolTimerCallbacks(pFTimer, TRUE);
+	//WaitForThreadpoolTimerCallbacks(pBTimer, TRUE);
+	if (!timerDeleted) {
+		CloseThreadpoolTimer(pFTimer);
+		CloseThreadpoolTimer(pBTimer);
+		cout << endl << "Timer deleted" << endl;
+		timerDeleted = true;
+	}
+
 }

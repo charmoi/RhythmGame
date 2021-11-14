@@ -1,9 +1,5 @@
-#define _CRTDBG_MAP_ALLOC
-
 #include <bangtal>
 #include <iostream>
-#include <stdlib.h>
-#include <crtdbg.h>
 #include <Windows.h>
 
 using namespace bangtal;
@@ -74,8 +70,6 @@ int main() {
 	InitInGame();
 	InitSelectPage();
 	Opening();
-
-	_CrtDumpMemoryLeaks();
 
 	if (!timerDeleted) {
 		WaitForThreadpoolTimerCallbacks(pFTimer, true);

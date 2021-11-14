@@ -36,6 +36,12 @@
     <ClCompile Include="Judge.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="HP.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GameResult.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SongInfo.h">
@@ -57,6 +63,12 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Judge.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HP.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameResult.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

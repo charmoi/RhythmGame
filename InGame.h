@@ -6,6 +6,7 @@
 #include "Score.h"
 #include "Note.h"
 #include "Judge.h"
+#include "HP.h"
 
 #define D 0
 #define F 1
@@ -13,6 +14,7 @@
 #define K 3
 
 #define IMG_POOL 5		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
+#define HP_DEFAULT 18	// 기본 HP값 **HP 최대값은 26; HP.h 참조
 
 using namespace std;
 using namespace bangtal;
@@ -28,6 +30,7 @@ ObjectPtr console;
 Score score;
 Score combo;
 Judge judge;
+HP hp;
 
 //---------------ingame_page의 유동 변수-----------------
 
@@ -73,9 +76,13 @@ void SetKeyboard();
 void InitInGame();
 // 렌더링용 타이머 콜백 함수
 VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer);
+// 맵리딩용 타이머 콜백 함수
+VOID CALLBACK beatCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer);
 // 게임 페이지 리셋
 void ResetInGame();
 // 게임 플레이 페이지로 이동
 void InGame();
 // 곡 선택 창으로 이동
 void SongSelect();
+// 플레이 종료 절차
+void ClosePlaying();

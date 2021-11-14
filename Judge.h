@@ -1,7 +1,6 @@
 #pragma once
 #include <bangtal>
 
-
 #define MISS 0
 #define GOOD 1
 #define GREAT 2
