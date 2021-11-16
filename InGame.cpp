@@ -199,7 +199,7 @@ void InitInGame() {
 	gameclear->hide();
 	gameover = Object::create("Images/gameover.png", ingame_page, 278, Y(701));
 	gameover->hide();
-	press_enter = Object::create("Images/press_enter_mini.png", ingame_page, 332, Y(496));
+	press_enter = Object::create("Images/pressEnterIngame.png", ingame_page, 314, Y(496));
 	press_enter->hide();
 
 	SetKeyboard();
