@@ -34,7 +34,7 @@
     
     1번곡: parachute - John K
     
-    2번곡: We go - Fromis9
+    2번곡: We go - Fromis_9
     
     3번곡: NAKKA - AKMU, IU
     
