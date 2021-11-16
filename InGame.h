@@ -56,6 +56,7 @@ FILETIME ftStartTime;			// 타이머 duetime 계산용
 UINT uFres = 20;				// 프레임 해상도 20ms
 UINT bpmTosec;					// bpm과 split을 토대로 노래 최소 박자를 ms 단위로 변환
 bool timerDeleted;
+bool beatTDeleted;
 bool safeEnd;					// 모든 노트가 제자리로 돌아감; true면 타이머 delete 가능
 bool lastLine;					// 마지막 줄 확인; true면 더이상 맵을 읽지 않음
 

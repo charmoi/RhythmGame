@@ -7,7 +7,7 @@
 #define PERFECT 3
 
 #define SCORE_PFT 17
-#define SCORE_GRT 12
+#define SCORE_GRT 13
 #define SCORE_GOD 10
 
 using namespace bangtal;

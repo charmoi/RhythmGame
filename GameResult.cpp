@@ -32,6 +32,7 @@ void InitGameResult() {
 			if (endAnimation) {
 				WaitForThreadpoolTimerCallbacks(pFTimer, TRUE);
 				CloseThreadpoolTimer(pFTimer);
+				timerDeleted = true;
 				cout << endl << "Timer deleted" << endl;
 				SongSelect();
 			}
@@ -54,15 +55,18 @@ void GradeCalc() {
 		return;
 	}
 
-	float percentage = (SCORE_GOD * judge.GetGood() + SCORE_GRT * judge.GetGreat() + SCORE_PFT * judge.GetPerfect()) / (SCORE_PFT * judge.GetTotal()) * 100;
+	int score = SCORE_GOD * judge.GetGood() + SCORE_GRT * judge.GetGreat() + SCORE_PFT * judge.GetPerfect();
+	int max = SCORE_PFT * judge.GetTotal();
 
-	if (percentage < 70)
+	double percentage = (double)score / max * 100;
+
+	if (percentage < 50)
 		songs[song_index].grade = "Images/gradeD.png";
-	else if (percentage < 80)
+	else if (percentage < 70)
 		songs[song_index].grade = "Images/gradeC.png";
-	else if (percentage < 90)
+	else if (percentage < 80)
 		songs[song_index].grade = "Images/gradeB.png";
-	else if (percentage < 95)
+	else if (percentage < 90)
 		songs[song_index].grade = "Images/gradeA.png";
 	else
 		songs[song_index].grade = "Images/gradeS.png";
@@ -82,19 +86,21 @@ VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 		return;
 	}
 	if (startGrade) {
-		if (gradeScale > 1.f) {
-			gradeScale -= 0.1f;
+		if (gradeScale > 1.1) {
+			gradeScale -= 0.1;
 			gradeResult->setScale(gradeScale);
 			return;
 		}
-		else if (gradeScale <= 1.f) {
+		else {
+			gradeResult->setScale(1.f);
+			endAnimation = true;
 			gradeSound->play(false);
 			if (isNewRecord) {
-				Sleep(1000);
+				Sleep(100);
 				newRecord->show();
 				// 효과음 추가
 			}
-			endAnimation = true;
+			return;
 		}
 	}
 	if (playScore) {
@@ -156,11 +162,6 @@ void GameResult() {
 		endGame();
 	}
 
-	cout << endl << "perfect: " << judge.GetPerfect() << endl;
-	cout << endl << "great: " << judge.GetGreat() << endl;
-	cout << endl << "good: " << judge.GetGood() << endl;
-	cout << endl << "miss: " << judge.GetMiss() << endl;
-
 	playScore = true;
 	startGrade = false;
 	endAnimation = false;
@@ -170,6 +171,6 @@ void GameResult() {
 
 	result_page->enter();
 
-	SetThreadpoolTimer(pFTimer, &ftStartTime, 25, 0);
+	SetThreadpoolTimer(pFTimer, &ftStartTime, 24, 0);
 	cout << endl << "Timer start" << endl;
 }

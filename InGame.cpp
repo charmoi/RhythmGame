@@ -326,6 +326,7 @@ void InGame() {
 	pFTimer = CreateThreadpoolTimer(frameCallback, NULL, NULL);
 	pBTimer = CreateThreadpoolTimer(beatCallback, NULL, NULL);
 	timerDeleted = false;
+	beatTDeleted = false;
 
 	ingame_page->enter();
 	
@@ -342,5 +343,6 @@ void ClosePlaying() {
 		CloseThreadpoolTimer(pBTimer);
 		cout << endl << "Timer deleted" << endl;
 		timerDeleted = true;
+		beatTDeleted = true;
 	}
 }

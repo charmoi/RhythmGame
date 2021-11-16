@@ -8,6 +8,7 @@ using namespace std;
 extern PTP_TIMER pFTimer;
 extern PTP_TIMER pBTimer;
 extern bool timerDeleted;
+extern bool beatTDeleted;
 extern FILETIME ftStartTime;
 
 ScenePtr start_page = Scene::create("Ω√¿€", "Images/startpage.png");
@@ -69,6 +70,7 @@ int main() {
 	setGameOption(GameOption::GAME_OPTION_ROOM_TITLE, false);
 
 	timerDeleted = true;
+	beatTDeleted = true;
 
 	ULARGE_INTEGER ulStartTime;
 	ulStartTime.QuadPart = (LONGLONG)-(10000000);
@@ -83,8 +85,10 @@ int main() {
 	if (!timerDeleted) {
 		WaitForThreadpoolTimerCallbacks(pFTimer, true);
 		CloseThreadpoolTimer(pFTimer);
-		WaitForThreadpoolTimerCallbacks(pBTimer, true);
-		CloseThreadpoolTimer(pBTimer);
+		if (!beatTDeleted) {
+			WaitForThreadpoolTimerCallbacks(pBTimer, true);
+			CloseThreadpoolTimer(pBTimer);
+		}
 		cout << endl << "Timer deleted" << endl;
 	}
 
