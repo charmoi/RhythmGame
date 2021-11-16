@@ -85,7 +85,15 @@ VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 	if (endAnimation) {
 		return;
 	}
+
 	if (startGrade) {
+		if (playScore) {
+			scoreSound->stop();
+			scoreResult.Update(score.GetScore());
+			gradeResult->show();
+			playScore = false;
+		}
+
 		if (gradeScale > 1.1) {
 			gradeScale -= 0.1;
 			gradeResult->setScale(gradeScale);
@@ -103,36 +111,42 @@ VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 			return;
 		}
 	}
-	if (playScore) {
+
+	if (!playScore) {
 		scoreSound->play(true);
-		playScore = false;
+		playScore = true;
 	}
 
-	if (perfect.GetScore() != judge.GetPerfect()) {
+	if (perfect.GetScore() != judge.GetPerfect())
 		perfect.Increase();
-		return;
-	}
-	if (great.GetScore() != judge.GetGreat()) {
-		great.Increase();
-		return;
-	}
-	if (good.GetScore() != judge.GetGood()) {
-		good.Increase();
-		return;
-	}
-	if (miss.GetScore() != judge.GetMiss()) {
-		miss.Increase();
-		return;
-	}
-	if (maxcombo.GetScore() != comboMax) {
-		maxcombo.Increase();
-		return;
-	}
-	scoreSound->stop();
-	scoreResult.Update(score.GetScore());
+	else
+		aniDone[0] = true;
 
+	if (great.GetScore() != judge.GetGreat())
+		great.Increase();
+	else
+		aniDone[1] = true;
+
+	if (good.GetScore() != judge.GetGood())
+		good.Increase();
+	else
+		aniDone[2] = true;
+
+	if (miss.GetScore() != judge.GetMiss())
+		miss.Increase();
+	else
+		aniDone[3] = true;
+
+	if (maxcombo.GetScore() != comboMax)
+		maxcombo.Increase();
+	else
+		aniDone[4] = true;
+
+	for (int i = 0; i < 5; i++) {
+		if (!aniDone[i])
+			return;
+	}
 	startGrade = true;
-	gradeResult->show();
 }
 
 void ResetGameResult() {
@@ -143,8 +157,24 @@ void ResetGameResult() {
 	maxcombo.Reset();
 	scoreResult.Reset();
 
+	perfect.Show();
+	great.Show();
+	good.Show();
+	miss.Show();
+	maxcombo.Show();
+
 	gradeResult->hide();
 	newRecord->hide();
+
+	playScore = false;
+	startGrade = false;
+	endAnimation = false;
+	isNewRecord = false;
+	gradeScale = 5.f;
+	gradeResult->setScale(gradeScale);
+	
+	for (int i = 0; i < 5; i++)
+		aniDone[i] = false;
 }
 
 void GameResult() {
@@ -162,15 +192,8 @@ void GameResult() {
 		endGame();
 	}
 
-	playScore = true;
-	startGrade = false;
-	endAnimation = false;
-	isNewRecord = false;
-	gradeScale = 5.f;
-	gradeResult->setScale(gradeScale);
-
 	result_page->enter();
 
-	SetThreadpoolTimer(pFTimer, &ftStartTime, 24, 0);
+	SetThreadpoolTimer(pFTimer, &ftStartTime, 30, 0);
 	cout << endl << "Timer start" << endl;
 }

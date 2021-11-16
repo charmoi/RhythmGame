@@ -39,6 +39,7 @@ bool startGrade;
 bool endAnimation;
 bool isNewRecord;
 float gradeScale;
+bool aniDone[5];
 
 // 곡 선택창으로 이동
 void SongSelect();

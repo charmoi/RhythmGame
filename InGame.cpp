@@ -59,15 +59,15 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 
 bool NoteJudge(int press_time, int start_time) {
 	int diff_abs = abs(press_time - (start_time + delay));	// delay: 노트가 출발 지점(0)부터 judgeline(680)까지 도달하는 데 소요되는 시간(ms)
-	if (diff_abs < 25) {
+	if (diff_abs < 33) {
 		score.Add(judge.PerfectInc() * bonus); // ***콤보 보너스 추가하기!!!
 		return true;
 	}
-	else if (diff_abs < 38) {
+	else if (diff_abs < 50) {
 		score.Add(judge.GreatInc() * bonus);
 		return true;
 	}
-	else if (diff_abs < 70) {
+	else if (diff_abs < 120) {
 		score.Add(judge.GoodInc() * bonus);
 		return true;
 	}
@@ -139,9 +139,12 @@ void SetKeyboard() {
 			}
 			break;
 		case KeyCode::KEY_ENTER:
-			if (pressed) {
+			if (!pressed) {
 				if (safeEnd) {
 					ClosePlaying();
+					if (combo.GetScore() > comboMax) {	// All combo 달성시, 여기서 max combo 저장
+						comboMax = combo.GetScore();
+					}
 					GameResult();
 				}
 			}
