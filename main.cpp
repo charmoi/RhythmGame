@@ -12,7 +12,8 @@ ScenePtr start_page = Scene::create("시작", "Images/startpage.png");
 
 void InitSelectPage();	// 곡 선택 페이지 생성
 void SongSelect();		// 곡 선택 페이지 이동
-void InitInGame();
+void InitInGame();		// 게임 플레이창 생성
+void InitGameResult();	// 게임 결과창 생성
 
 void Opening() {
 	ObjectPtr opening_t1 = Object::create("Images/start_t1.png", start_page, 0, 189);
@@ -67,8 +68,9 @@ int main() {
 
 	timerDeleted = true;
 
-	InitInGame();
 	InitSelectPage();
+	InitInGame();
+	InitGameResult();
 	Opening();
 
 	if (!timerDeleted) {
