@@ -13,7 +13,7 @@
 #define J 2
 #define K 3
 
-#define IMG_POOL 5		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
+#define IMG_POOL 7		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
 #define HP_DEFAULT 18	// 기본 HP값 **HP 최대값은 26; HP.h 참조
 
 using namespace std;

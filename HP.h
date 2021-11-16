@@ -2,7 +2,7 @@
 #include <bangtal>
 
 #define HP_MAX 27			// 배열 길이는 27, hp 최대값은 26
-#define HP_LOSS 8
+#define HP_LOSS 6
 
 using namespace bangtal;
 using namespace std;
