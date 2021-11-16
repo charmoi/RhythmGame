@@ -130,11 +130,20 @@ VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 }
 
 void ResetGameResult() {
+	perfect.Reset();
+	great.Reset();
+	good.Reset();
+	miss.Reset();
+	maxcombo.Reset();
+	scoreResult.Reset();
 
+	gradeResult->hide();
+	newRecord->hide();
 }
 
 void GameResult() {
 	// bgm วรทนภฬ
+	ResetGameResult();
 
 	GradeCalc();
 	HighscoreCalc();

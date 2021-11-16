@@ -51,5 +51,5 @@ void HighscoreCalc();
 // 점수 올라가는 애니메이션
 VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer);
 // 게임 결과 창 리셋
-void ResetGameResult;
+void ResetGameResult();
 void GameResult();
