@@ -8,6 +8,8 @@ using namespace std;
 extern PTP_TIMER pFTimer;
 extern PTP_TIMER pBTimer;
 extern bool timerDeleted;
+extern FILETIME ftStartTime;
+
 ScenePtr start_page = Scene::create("시작", "Images/startpage.png");
 
 void InitSelectPage();	// 곡 선택 페이지 생성
@@ -68,6 +70,11 @@ int main() {
 
 	timerDeleted = true;
 
+	ULARGE_INTEGER ulStartTime;
+	ulStartTime.QuadPart = (LONGLONG)-(10000000);
+	ftStartTime.dwHighDateTime = ulStartTime.HighPart;
+	ftStartTime.dwLowDateTime = ulStartTime.LowPart;
+
 	InitSelectPage();
 	InitInGame();
 	InitGameResult();
@@ -75,8 +82,8 @@ int main() {
 
 	if (!timerDeleted) {
 		WaitForThreadpoolTimerCallbacks(pFTimer, true);
-		WaitForThreadpoolTimerCallbacks(pBTimer, true);
 		CloseThreadpoolTimer(pFTimer);
+		WaitForThreadpoolTimerCallbacks(pBTimer, true);
 		CloseThreadpoolTimer(pBTimer);
 		cout << endl << "Timer deleted" << endl;
 	}

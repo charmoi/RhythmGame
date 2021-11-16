@@ -1,8 +1,10 @@
 #include "GameResult.h"
 #include "Others.h"
+#include <iostream>
+
 
 void InitGameResult() {
-	result_page = Scene::create("게임 결과", "Images/NAKKA_bs.png");
+	result_page = Scene::create("게임 결과", "Images/NAKKA_bg.png");
 	bg = Object::create("Images/NAKKA_result.png", result_page, 0, 0);	// 낙하 이미지로 초기화
 	string temp[10];
 	char buf[20];
@@ -23,9 +25,142 @@ void InitGameResult() {
 	newRecord->hide();
 
 	scoreSound = Sound::create("Sounds/score.mp3");
+	gradeSound = Sound::create("Sounds/grade.mp3");
+
+	result_page->setOnKeyboardCallback([&](ScenePtr scene, KeyCode key, bool pressed)->bool {
+		if (key == KeyCode::KEY_ENTER && !pressed) {
+			if (endAnimation) {
+				WaitForThreadpoolTimerCallbacks(pFTimer, TRUE);
+				CloseThreadpoolTimer(pFTimer);
+				cout << endl << "Timer deleted" << endl;
+				SongSelect();
+			}
+		}
+
+		return true;
+		});
+
+}
+
+void GradeCalc() {
+	if (isGameover) {
+		songs[song_index].grade = "Images/gradeF.png";
+		gradeResult->setImage(songs[song_index].grade);
+		return;
+	}
+	if (judge.GetPerfect() == judge.GetTotal()) {
+		songs[song_index].grade = "Images/gradePFT.png";
+		gradeResult->setImage(songs[song_index].grade);
+		return;
+	}
+
+	float percentage = (SCORE_GOD * judge.GetGood() + SCORE_GRT * judge.GetGreat() + SCORE_PFT * judge.GetPerfect()) / (SCORE_PFT * judge.GetTotal()) * 100;
+
+	if (percentage < 70)
+		songs[song_index].grade = "Images/gradeD.png";
+	else if (percentage < 80)
+		songs[song_index].grade = "Images/gradeC.png";
+	else if (percentage < 90)
+		songs[song_index].grade = "Images/gradeB.png";
+	else if (percentage < 95)
+		songs[song_index].grade = "Images/gradeA.png";
+	else
+		songs[song_index].grade = "Images/gradeS.png";
+
+	gradeResult->setImage(songs[song_index].grade);
+}
+
+void HighscoreCalc() {
+	if (songs[song_index].highscore < score.GetScore()) {
+		songs[song_index].highscore = score.GetScore();
+		isNewRecord = true;
+	}
+}
+
+VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer) {
+	if (endAnimation) {
+		return;
+	}
+	if (startGrade) {
+		if (gradeScale > 1.f) {
+			gradeScale -= 0.1f;
+			gradeResult->setScale(gradeScale);
+			return;
+		}
+		else if (gradeScale <= 1.f) {
+			gradeSound->play(false);
+			if (isNewRecord) {
+				Sleep(1000);
+				newRecord->show();
+				// 효과음 추가
+			}
+			endAnimation = true;
+		}
+	}
+	if (playScore) {
+		scoreSound->play(true);
+		playScore = false;
+	}
+
+	if (perfect.GetScore() != judge.GetPerfect()) {
+		perfect.Increase();
+		return;
+	}
+	if (great.GetScore() != judge.GetGreat()) {
+		great.Increase();
+		return;
+	}
+	if (good.GetScore() != judge.GetGood()) {
+		good.Increase();
+		return;
+	}
+	if (miss.GetScore() != judge.GetMiss()) {
+		miss.Increase();
+		return;
+	}
+	if (maxcombo.GetScore() != comboMax) {
+		maxcombo.Increase();
+		return;
+	}
+	scoreSound->stop();
+	scoreResult.Update(score.GetScore());
+
+	startGrade = true;
+	gradeResult->show();
+}
+
+void ResetGameResult() {
+
 }
 
 void GameResult() {
 	// bgm 플레이
 
+	GradeCalc();
+	HighscoreCalc();
+
+	pFTimer = CreateThreadpoolTimer(timerCallback, NULL, NULL);
+	timerDeleted = false;
+
+	if (NULL == pFTimer) {
+		cout << endl << "Animation timer failed: False Creation" << endl;
+		endGame();
+	}
+
+	cout << endl << "perfect: " << judge.GetPerfect() << endl;
+	cout << endl << "great: " << judge.GetGreat() << endl;
+	cout << endl << "good: " << judge.GetGood() << endl;
+	cout << endl << "miss: " << judge.GetMiss() << endl;
+
+	playScore = true;
+	startGrade = false;
+	endAnimation = false;
+	isNewRecord = false;
+	gradeScale = 5.f;
+	gradeResult->setScale(gradeScale);
+
+	result_page->enter();
+
+	SetThreadpoolTimer(pFTimer, &ftStartTime, 25, 0);
+	cout << endl << "Timer start" << endl;
 }

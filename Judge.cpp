@@ -50,7 +50,7 @@ int Judge::GoodInc() {
 	object->setImage(img[GOOD]);
 	if (!shown)
 		Show();
-	return 10;
+	return SCORE_GOD;
 }
 
 int Judge::GreatInc() {
@@ -58,7 +58,7 @@ int Judge::GreatInc() {
 	object->setImage(img[GREAT]);
 	if (!shown)
 		Show();
-	return 12;
+	return SCORE_GRT;
 }
 
 int Judge::PerfectInc() {
@@ -66,7 +66,7 @@ int Judge::PerfectInc() {
 	object->setImage(img[PERFECT]);
 	if (!shown)
 		Show();
-	return 17;
+	return SCORE_PFT;
 }
 
 int Judge::GetMiss() {
@@ -83,6 +83,10 @@ int Judge::GetGreat() {
 
 int Judge::GetPerfect() {
 	return perfect;
+}
+
+int Judge::GetTotal() {
+	return miss + good + great + perfect;
 }
 
 void Judge::Show() {

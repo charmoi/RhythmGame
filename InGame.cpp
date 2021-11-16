@@ -142,7 +142,7 @@ void SetKeyboard() {
 			if (pressed) {
 				if (safeEnd) {
 					ClosePlaying();
-					// result 페이지 이동
+					GameResult();
 				}
 			}
 			break;
@@ -243,6 +243,7 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 					if (!hp.Decrease()) {
 						if (!safeEnd) {					// 중복 호출 방지
 							safeEnd = true;
+							isGameover = true;			// 게임 오버 알림
 							gameover->show();
 							songs[song_index].Stop();
 						}
@@ -304,13 +305,13 @@ void ResetInGame() {
 	speed = songs[song_index].speed;				// trigger_frame 값이 정수로 나누어떨어지도록 680의 약수로 설정
 	trigger_frame = 680 / speed;					
 	delay = uFres * trigger_frame;					// 노트 출발부터 도착까지 걸리는 시간 (ms단위)
-	timerDeleted = false;
 	judge.Reset();
 	hp.Update(HP_DEFAULT);
 	gameover->hide();
 	gameclear->hide();
 	press_enter->hide();
 	comboMax = 0;
+	isGameover = false;
 }
 
 void InGame() {
@@ -324,11 +325,7 @@ void InGame() {
 	
 	pFTimer = CreateThreadpoolTimer(frameCallback, NULL, NULL);
 	pBTimer = CreateThreadpoolTimer(beatCallback, NULL, NULL);
-
-	ULARGE_INTEGER ulStartTime;
-	ulStartTime.QuadPart = (LONGLONG)-(10000000);
-	ftStartTime.dwHighDateTime = ulStartTime.HighPart;
-	ftStartTime.dwLowDateTime = ulStartTime.LowPart;
+	timerDeleted = false;
 
 	ingame_page->enter();
 	

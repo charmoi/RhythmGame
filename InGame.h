@@ -46,6 +46,7 @@ char speed;			// 프레임 반복마다 노트 이미지가 이동하는 픽셀거리
 
 int comboMax;		
 double bonus;		// 콤보 수에 따라 점수에 가산되는 보너스
+bool isGameover;		// GameResult에 넘겨줄 게임 오버 여부
 
 //---------------Timer 관련 변수-----------------
 
@@ -72,6 +73,8 @@ char time_index[4];				// note_time을 순서대로 읽기 위한 인덱스
 int pressed_time[4];			// 키 누른 시간 저장용
 
 
+// 게임 결과 창으로 이동
+void GameResult();
 // 노트 맵 생성
 bool CreateMap(int& index, unique_ptr<bool[]>& note_map);
 // 판정 함수; 누른 시각과 노트 시작한 시각을 비교
