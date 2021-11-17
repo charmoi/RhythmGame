@@ -5,20 +5,20 @@ void InitSelectPage(){
 	// 곡 정보 입력
 	select_page = Scene::create("곡선택", "Images/NAKKA_bg.png");
 	// speed 변수에는 680의 약수만 넣기 ex) 8, 10, 17, 20, 40
-	songs[0].Create("Images/NAKKA_bg.png", "Images/NAKKA_cover.png", "Images/NAKKA_info.png", "Sounds/NAKKA_100.mp3", "Images/NAKKA_cs.png", "Images/NAKKA_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
-	songs[1].Create("Images/parachute_bg.png", "Images/parachute_cover.png", "Images/parachute_info.png", "Sounds/parachute.mp3", "Images/parachute_cs.png", "Images/parachute_result.png", "NoteMaps/NAKKA_AKMU.txt", 20);
-	songs[2].Create("Images/STAY_bg.png", "Images/STAY_cover.png", "Images/STAY_info.png", "Sounds/STAY.mp3", "Images/STAY_cs.png", "Images/STAY_result.png", "NoteMaps/NAKKA_AKMU.txt", 20);
-	songs[3].Create("Images/AfterSchool_bg.png", "Images/AfterSchool_cover.png", "Images/AfterSchool_info.png", "Sounds/AfterSchool.mp3", "Images/AfterSchool_cs.png", "Images/AfterSchool_result.png", "NoteMaps/NAKKA_AKMU.txt", 20);
+	songs[0].Create("Images/parachute_bg.png", "Images/parachute_cover.png", "Images/parachute_info.png", "Sounds/parachute_cut.mp3", "Images/parachute_cs.png", "Images/parachute_result.png", "NoteMaps/parachute_JohnK.txt", 8);
+	songs[1].Create("Images/NAKKA_bg.png", "Images/NAKKA_cover.png", "Images/NAKKA_info.png", "Sounds/NAKKA_100.mp3", "Images/NAKKA_cs.png", "Images/NAKKA_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
+	songs[2].Create("Images/STAY_bg.png", "Images/STAY_cover.png", "Images/STAY_info.png", "Sounds/STAY.mp3", "Images/STAY_cs.png", "Images/STAY_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
+	songs[3].Create("Images/AfterSchool_bg.png", "Images/AfterSchool_cover.png", "Images/AfterSchool_info.png", "Sounds/AfterSchool.mp3", "Images/AfterSchool_cs.png", "Images/AfterSchool_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
 
 	// 화면 내 오브젝트 생성; 0번 song 이미지 기준으로 최초 설정
-	background = Object::create(songs[0].bg, select_page, 0, 0);
+	background = Object::create("Images/parachute_bg.png", select_page, 0, 0);
 	selected_bg = Object::create("Images/selected_bg.png", select_page, 369, 0);
-	song_selected = Object::create(songs[0].img, select_page, 400, 208);
-	song_left = Object::create(songs[SONG_MAX - 1].img, select_page, -112, Y(512));
+	song_selected = Object::create("Images/parachute_cover.png", select_page, 400, 208);
+	song_left = Object::create("Images/AfterSchool_cover.png", select_page, -112, Y(512));
 	song_left->setScale(MINI_ALBUM);
-	song_right = Object::create(songs[1].img, select_page, 1008, Y(512));
+	song_right = Object::create("Images/NAKKA_cover.png", select_page, 1008, Y(512));
 	song_right->setScale(MINI_ALBUM);
-	song_info = Object::create(songs[0].info, select_page, 412, Y(604));
+	song_info = Object::create("Images/parachute_info.png", select_page, 412, Y(604));
 	highscore_t = Object::create("Images/highscore.png", select_page, 802, Y(576));
 	highscore_t->hide();
 	string temp[10];

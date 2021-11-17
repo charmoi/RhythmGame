@@ -171,6 +171,7 @@ VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 }
 
 void ResetGameResult() {
+	bg->setImage(songs[song_index].result);
 	perfect.Reset();
 	great.Reset();
 	good.Reset();

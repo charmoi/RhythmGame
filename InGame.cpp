@@ -176,7 +176,7 @@ void InitInGame() {
 		note_img[K][i].Create("Images/note4.png", ingame_page, 572, 720);
 	}
 
-	console = Object::create(songs[0].cs, ingame_page, 0, 0);	// 0번 곡 이미지로 임시 설정
+	console = Object::create("Images/parachute_cs.png", ingame_page, 0, 0);	// 0번 곡 이미지로 임시 설정
 
 	string temp[10];
 	char buf[20];
