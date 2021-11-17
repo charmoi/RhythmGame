@@ -213,6 +213,8 @@ void InitInGame() {
 	clearSound = Sound::create("Sounds/gameclear.mp3");
 	overSound = Sound::create("Sounds/gameover.mp3");
 
+	instIngame = Object::create("Images/inst_ingame.png", ingame_page, 722, Y(686));
+
 	SetKeyboard();
 }
 

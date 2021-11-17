@@ -37,6 +37,7 @@ ObjectPtr press_enter;
 ObjectPtr press_enterRe;
 SoundPtr clearSound;
 SoundPtr overSound;
+ObjectPtr instIngame;
 
 //---------------ingame_page의 유동 변수-----------------
 
