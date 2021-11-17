@@ -24,6 +24,10 @@ void InitGameResult() {
 	newRecord = Object::create("Images/newRecord.png", result_page, 826, Y(176));
 	newRecord->hide();
 
+	pressEnterResult = Object::create("Images/pressEnter.png", result_page, 843, Y(641));
+	pressEnterResult->setScale(0.8f);
+	pressEnterResult->hide();
+
 	scoreSound = Sound::create("Sounds/score.mp3");
 	gradeSound = Sound::create("Sounds/grade.mp3");
 
@@ -83,6 +87,17 @@ void HighscoreCalc() {
 
 VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer) {
 	if (endAnimation) {
+		if (frame_count % 20 == 0) {	// 20프레임(20 * 30ms = 0.6초)마다 깜빡임 효과
+			if (!img_shown) {
+				pressEnterResult->show();
+				img_shown = true;
+			}
+			else {
+				pressEnterResult->hide();
+				img_shown = false;
+			}
+		}
+		frame_count++;
 		return;
 	}
 
@@ -165,6 +180,7 @@ void ResetGameResult() {
 
 	gradeResult->hide();
 	newRecord->hide();
+	pressEnterResult->hide();
 
 	playScore = false;
 	startGrade = false;
@@ -172,9 +188,11 @@ void ResetGameResult() {
 	isNewRecord = false;
 	gradeScale = 5.f;
 	gradeResult->setScale(gradeScale);
-	
+
 	for (int i = 0; i < 5; i++)
 		aniDone[i] = false;
+	frame_count = 0;
+	img_shown = false;
 }
 
 void GameResult() {

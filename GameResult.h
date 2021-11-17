@@ -11,6 +11,8 @@ using namespace std;
 //---------------SongSelect에서 넘겨 받는 변수-------------
 extern SongInfo songs[];
 extern int song_index;
+extern bool img_shown;
+extern int frame_count;
 
 //---------------InGame에서 넘겨 받는 변수-----------------
 extern Judge judge;
@@ -32,6 +34,7 @@ Score maxcombo;
 Score scoreResult;
 ObjectPtr gradeResult;
 ObjectPtr newRecord;
+ObjectPtr pressEnterResult;
 SoundPtr scoreSound;
 SoundPtr gradeSound;
 
@@ -41,6 +44,7 @@ bool endAnimation;
 bool isNewRecord;
 float gradeScale;
 bool aniDone[5];
+
 
 // 곡 선택창으로 이동
 void SongSelect();
