@@ -26,6 +26,7 @@ extern bool isGameover;
 //---------------GameResult에서 사용하는 객체--------------
 ScenePtr result_page;
 ObjectPtr bg;
+ObjectPtr fullCombo;
 Score perfect;
 Score great;
 Score good;

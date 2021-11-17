@@ -6,6 +6,8 @@
 void InitGameResult() {
 	result_page = Scene::create("게임 결과", "Images/NAKKA_bg.png");
 	bg = Object::create("Images/NAKKA_result.png", result_page, 0, 0);	// 낙하 이미지로 초기화
+	fullCombo = Object::create("Images/fullCombo.png", result_page, 714, Y(513));
+	fullCombo->hide();
 	string temp[10];
 	char buf[20];
 	for (int i = 0; i < 10; i++) {
@@ -28,7 +30,7 @@ void InitGameResult() {
 	pressEnterResult->setScale(0.8f);
 	pressEnterResult->hide();
 
-	scoreSound = Sound::create("Sounds/score.mp3");
+	scoreSound = Sound::create("Sounds/score_low.mp3");
 	gradeSound = Sound::create("Sounds/grade.mp3");
 
 	result_page->setOnKeyboardCallback([&](ScenePtr scene, KeyCode key, bool pressed)->bool {
@@ -154,8 +156,12 @@ VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 
 	if (maxcombo.GetScore() != comboMax)
 		maxcombo.Increase();
-	else
+	else {
 		aniDone[4] = true;
+		if (judge.GetTotal() == comboMax) {
+			fullCombo->show();
+		}
+	}
 
 	for (int i = 0; i < 5; i++) {
 		if (!aniDone[i])
@@ -178,6 +184,7 @@ void ResetGameResult() {
 	miss.Show();
 	maxcombo.Show();
 
+	fullCombo->hide();
 	gradeResult->hide();
 	newRecord->hide();
 	pressEnterResult->hide();
