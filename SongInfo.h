@@ -32,9 +32,12 @@ public:
 
 	friend void InitSelectPage();
 	friend void Slide(char dir);
+	friend void SongSelect();
+
 	friend void InitInGame();
 	friend bool CreateMap(int& index, unique_ptr<bool[]>& note_map);
 	friend void ResetInGame();
+
 	friend void GradeCalc();
 	friend void HighscoreCalc();
 };

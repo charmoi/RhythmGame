@@ -142,10 +142,16 @@ void SetKeyboard() {
 			if (!pressed) {
 				if (safeEnd) {
 					ClosePlaying();
-					if (combo.GetScore() > comboMax) {	// All combo 달성시, 여기서 max combo 저장
-						comboMax = combo.GetScore();
+					if (isGameover) {
+						InGame();
+						break;
 					}
-					GameResult();
+					else {
+						if (combo.GetScore() > comboMax) {	// All combo 달성시, 여기서 max combo 저장
+							comboMax = combo.GetScore();
+						}
+						GameResult();
+					}
 				}
 			}
 			break;
@@ -201,6 +207,8 @@ void InitInGame() {
 	gameover->hide();
 	press_enter = Object::create("Images/pressEnterIngame.png", ingame_page, 314, Y(496));
 	press_enter->hide();
+	press_enterRe = Object::create("Images/pressEnterReplay.png", ingame_page, 324, Y(496));
+	press_enterRe->hide();
 
 	clearSound = Sound::create("Sounds/gameclear.mp3");
 	overSound = Sound::create("Sounds/gameover.mp3");
@@ -212,12 +220,24 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 	if (safeEnd) {						// 게임 종료 플래그
 		if (frame_count % 30 == 0) {	// 30프레임(30 * 20ms = 0.6초)마다 깜빡임 효과
 			if (!img_shown) {
-				press_enter->show();
-				img_shown = true;
+				if (isGameover) {
+					press_enterRe->show();
+					img_shown = true;
+				}
+				else {
+					press_enter->show();
+					img_shown = true;
+				}
 			}
 			else {
-				press_enter->hide();
-				img_shown = false;
+				if (isGameover) {
+					press_enterRe->hide();
+					img_shown = false;
+				}
+				else {
+					press_enter->hide();
+					img_shown = false;
+				}
 			}
 		}
 		frame_count++;
@@ -318,6 +338,7 @@ void ResetInGame() {
 	gameover->hide();
 	gameclear->hide();
 	press_enter->hide();
+	press_enterRe->hide();
 	comboMax = 0;
 	isGameover = false;
 }

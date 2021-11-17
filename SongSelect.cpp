@@ -29,7 +29,7 @@ void InitSelectPage(){
 	}
 	highscore.Create(temp, 13, select_page, 855, Y(605), 6);
 	highscore.Hide();
-	grade = Object::create("Images/F.png", select_page, 787, Y(700));
+	grade = Object::create("Images/gradeF.png", select_page, 779, Y(695));
 	grade->setScale(MINI_GRADE);
 	grade->hide();
 	instruction = Object::create("Images/select_inst.png", select_page, 1016, Y(696));
@@ -124,6 +124,22 @@ void Slide(char dir) {
 
 void SongSelect() {
 	songs[song_index].Play(true);
+	if (songs[song_index].highscore) {
+		highscore_t->show();
+		highscore.Update(songs[song_index].highscore);
+		highscore.Show();
+	}
+	else {
+		highscore_t->hide();
+		highscore.Hide();
+	}
+	if (songs[song_index].grade != "\0") {
+		grade->setImage(songs[song_index].grade);
+		grade->show();
+	}
+	else {
+		grade->hide();
+	}
 	select_page->enter();
 	key_block = false;
 }

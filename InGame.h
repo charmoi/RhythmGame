@@ -34,6 +34,7 @@ HP hp;
 ObjectPtr gameover;
 ObjectPtr gameclear;
 ObjectPtr press_enter;
+ObjectPtr press_enterRe;
 SoundPtr clearSound;
 SoundPtr overSound;
 
