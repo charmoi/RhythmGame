@@ -34,6 +34,8 @@ HP hp;
 ObjectPtr gameover;
 ObjectPtr gameclear;
 ObjectPtr press_enter;
+SoundPtr clearSound;
+SoundPtr overSound;
 
 //---------------ingame_page의 유동 변수-----------------
 

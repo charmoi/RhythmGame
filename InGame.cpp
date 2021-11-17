@@ -202,6 +202,9 @@ void InitInGame() {
 	press_enter = Object::create("Images/pressEnterIngame.png", ingame_page, 314, Y(496));
 	press_enter->hide();
 
+	clearSound = Sound::create("Sounds/gameclear.mp3");
+	overSound = Sound::create("Sounds/gameover.mp3");
+
 	SetKeyboard();
 }
 
@@ -249,6 +252,7 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 							isGameover = true;			// 게임 오버 알림
 							gameover->show();
 							songs[song_index].Stop();
+							overSound->play(false);
 						}
 					}
 				}
@@ -260,6 +264,7 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 			if (!safeEnd) {									// 중복 호출 방지
 				safeEnd = true;								// 종료 키 (타이머 소멸 함수) 작동 가능
 				gameclear->show();
+				clearSound->play(false);
 			}
 		}
 	}

@@ -34,6 +34,7 @@ ObjectPtr gradeResult;
 ObjectPtr newRecord;
 SoundPtr scoreSound;
 SoundPtr gradeSound;
+
 bool playScore;
 bool startGrade;
 bool endAnimation;
