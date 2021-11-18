@@ -6,7 +6,7 @@ void InitSelectPage(){
 	select_page = Scene::create("곡선택", "Images/NAKKA_bg.png");
 	// speed 변수에는 680의 약수만 넣기 ex) 8, 10, 17, 20, 40
 	songs[0].Create("Images/parachute_bg.png", "Images/parachute_cover.png", "Images/parachute_info.png", "Sounds/parachute_cut.mp3", "Images/parachute_cs.png", "Images/parachute_result.png", "NoteMaps/parachute_JohnK.txt", 8);
-	songs[1].Create("Images/WeGo_bg.png", "Images/WeGo_cover.png", "Images/WeGo_info.png", "Sounds/WeGo_125.mp3", "Images/WeGo_cs.png", "Images/WeGo_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
+	songs[1].Create("Images/WeGo_bg.png", "Images/WeGo_cover.png", "Images/WeGo_info.png", "Sounds/WeGo_125.mp3", "Images/WeGo_cs.png", "Images/WeGo_result.png", "NoteMaps/WeGo_Fromis9.txt", 10);
 	songs[2].Create("Images/NAKKA_bg.png", "Images/NAKKA_cover.png", "Images/NAKKA_info.png", "Sounds/NAKKA_100.mp3", "Images/NAKKA_cs.png", "Images/NAKKA_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
 	songs[3].Create("Images/AfterSchool_bg.png", "Images/AfterSchool_cover.png", "Images/AfterSchool_info.png", "Sounds/AfterSchool.mp3", "Images/AfterSchool_cs.png", "Images/AfterSchool_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
 
