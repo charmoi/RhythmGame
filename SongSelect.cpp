@@ -8,7 +8,7 @@ void InitSelectPage(){
 	songs[0].Create("Images/parachute_bg.png", "Images/parachute_cover.png", "Images/parachute_info.png", "Sounds/parachute_cut.mp3", "Images/parachute_cs.png", "Images/parachute_result.png", "NoteMaps/parachute_JohnK.txt", 8);
 	songs[1].Create("Images/WeGo_bg.png", "Images/WeGo_cover.png", "Images/WeGo_info.png", "Sounds/WeGo_125.mp3", "Images/WeGo_cs.png", "Images/WeGo_result.png", "NoteMaps/WeGo_Fromis9.txt", 10);
 	songs[2].Create("Images/NAKKA_bg.png", "Images/NAKKA_cover.png", "Images/NAKKA_info.png", "Sounds/NAKKA_100.mp3", "Images/NAKKA_cs.png", "Images/NAKKA_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
-	songs[3].Create("Images/PTD_bg.png", "Images/PTD_cover.png", "Images/PTD_info.png", "Sounds/PTD.mp3", "Images/PTD_cs.png", "Images/PTD_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
+	songs[3].Create("Images/PTD_bg.png", "Images/PTD_cover.png", "Images/PTD_info.png", "Sounds/PTD.mp3", "Images/PTD_cs.png", "Images/PTD_result.png", "NoteMaps/PTD_BTS.txt", 17);
 
 	// 화면 내 오브젝트 생성; 0번 song 이미지 기준으로 최초 설정
 	background = Object::create("Images/parachute_bg.png", select_page, 0, 0);
