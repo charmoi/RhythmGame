@@ -5,7 +5,7 @@
 
 #define MINI_ALBUM 0.8f
 #define MINI_GRADE 0.25f
-#define SONG_MAX 4
+#define SONG_MAX 6
 #define LEFT 0
 #define RIGHT 1
 
