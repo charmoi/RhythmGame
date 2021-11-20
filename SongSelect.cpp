@@ -11,7 +11,7 @@ void InitSelectPage(){
 	songs[3].Create("Images/NAKKA_bg.png", "Images/NAKKA_cover.png", "Images/NAKKA_info.png", "Sounds/NAKKA_100.mp3", "Images/NAKKA_cs.png", "Images/NAKKA_result.png", "NoteMaps/NAKKA_AKMU.txt", 10);
 	songs[4].Create("Images/PTD_bg.png", "Images/PTD_cover.png", "Images/PTD_M_info.png", "Sounds/PTD.mp3", "Images/PTD_M_cs.png", "Images/PTD_M_result.png", "NoteMaps/PTD_BTS_M.txt", 10);
 	songs[5].Create("Images/WeGo_bg.png", "Images/WeGo_cover.png", "Images/WeGo_H_info.png", "Sounds/WeGo_125.mp3", "Images/WeGo_H_cs.png", "Images/WeGo_H_result.png", "NoteMaps/WeGo_Fromis9.txt", 17);
-	songs[6].Create("Images/NAKKA_bg.png", "Images/NAKKA_cover.png", "Images/NAKKA_H_info.png", "Sounds/NAKKA_100.mp3", "Images/NAKKA_H_cs.png", "Images/NAKKA_H_result.png", "NoteMaps/WeGo_Fromis9.txt", 17);
+	songs[6].Create("Images/NAKKA_bg.png", "Images/NAKKA_cover.png", "Images/NAKKA_H_info.png", "Sounds/NAKKA_100.mp3", "Images/NAKKA_H_cs.png", "Images/NAKKA_H_result.png", "NoteMaps/NAKKA_AKMU_H.txt", 17);
 	songs[7].Create("Images/PTD_bg.png", "Images/PTD_cover.png", "Images/PTD_info.png", "Sounds/PTD.mp3", "Images/PTD_cs.png", "Images/PTD_result.png", "NoteMaps/PTD_BTS.txt", 17);
 
 	// 화면 내 오브젝트 생성; 0번 song 이미지 기준으로 최초 설정
