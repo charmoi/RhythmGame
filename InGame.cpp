@@ -462,6 +462,6 @@ void ClosePlaying() {
 
 void StoryGameover() {
 	SceneGameover[gameoverIndex]->show();
-	if (++gameoverIndex > 4)
-		gameoverIndex = 1;
+	if (++gameoverIndex > 3)
+		gameoverIndex = 0;
 }
