@@ -159,16 +159,6 @@ void SetKeyboard() {
 					}
 					else {
 						if (onStoryMode) {
-							if (sceneIndex < 54) {	// 54번 장면이 마지막 스테이지
-								sceneIndex++;
-							}
-							else {
-								sceneIndex = 1;		// 1번 장면
-								if (score.GetScore() > MISSION)
-									storyRoute = 2;	// 성공 결말
-								else
-									storyRoute = 1; // 실패 결말
-							}
 							StoryMode(false);
 						}
 						else {
@@ -244,7 +234,7 @@ void InitInGame() {
 	}
 	gameoverIndex = 1;
 
-	SceneClear = Object::create("Images/Story/bg_1.jpg", ingame_page, 0, 0, false);
+	SceneClear = Object::create("Images/Story/clear.png", ingame_page, 0, 0, false);
 
 	clearSound = Sound::create("Sounds/gameclear.mp3");
 	overSound = Sound::create("Sounds/gameover.mp3");
@@ -332,6 +322,16 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 			if (!safeEnd) {									// 중복 호출 방지
 				safeEnd = true;								// 종료 키 (타이머 소멸 함수) 작동 가능
 				if (onStoryMode) {
+					if (sceneIndex < 54) {	// 54번 장면이 마지막 스테이지
+						sceneIndex++;
+					}
+					else {
+						sceneIndex = 1;		// 1번 장면
+						if (score.GetScore() > MISSION)
+							storyRoute = 2;	// 성공 결말
+						else
+							storyRoute = 1; // 실패 결말
+					}
 					SceneClear->show();
 					// 관객 환호
 				}
