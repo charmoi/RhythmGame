@@ -16,13 +16,20 @@
 #define IMG_POOL 7		// 노트 하강 애니메이션용 이미지 풀; 동시 가용 노트 이미지 수
 #define HP_DEFAULT 18	// 기본 HP값 **HP 최대값은 26; HP.h 참조
 
+#define MISSION 3500	// 스토리모드 결말 미션
+
 using namespace std;
 using namespace bangtal;
 
-//---------------ingame_page의 고정 객체-----------------
-
 extern SongInfo songs[];
 extern int song_index;
+extern bool onStoryMode;
+extern int sceneIndex;
+extern int songIndexStory;
+extern int storyRoute;
+
+//---------------ingame_page의 고정 객체-----------------
+
 ScenePtr ingame_page;
 ObjectPtr keylight[4];
 Note note_img[4][IMG_POOL];
@@ -38,6 +45,8 @@ ObjectPtr press_enterRe;
 SoundPtr clearSound;
 SoundPtr overSound;
 ObjectPtr instIngame;
+ObjectPtr SceneGameover[4];
+ObjectPtr SceneClear;
 
 //---------------ingame_page의 유동 변수-----------------
 
@@ -64,6 +73,7 @@ bool beatTDeleted;
 bool safeEnd;					// 모든 노트가 제자리로 돌아감; true면 타이머 delete 가능
 bool lastLine;					// 마지막 줄 확인; true면 더이상 맵을 읽지 않음
 
+int gameoverIndex;				// 스토리모드 게임오버 장면 교체 인덱스
 bool img_shown;					// press_enter 문구 깜빡임용
 
 bool note_move[4][IMG_POOL];	// 5가지 key에 대해, note_img를 움직일지 말지 저장
@@ -78,10 +88,15 @@ char time_index[4];				// note_time을 순서대로 읽기 위한 인덱스
 int pressed_time[4];			// 키 누른 시간 저장용
 
 
+// 스토리 모드로 이동
+void StoryMode(bool restart);
 // 게임 결과 창으로 이동
 void GameResult();
+// 게임 모드 선택으로 이동
+void GameMode();
+
 // 노트 맵 생성
-bool CreateMap(int& index, unique_ptr<bool[]>& note_map);
+bool CreateMap(const int& index, unique_ptr<bool[]>& note_map);
 // 판정 함수; 누른 시각과 노트 시작한 시각을 비교
 bool NoteJudge(int press_time, int start_time);
 // 콤보 보너스 설정
@@ -97,10 +112,12 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 // 맵리딩용 타이머 콜백 함수
 VOID CALLBACK beatCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer);
 // 게임 페이지 리셋
-void ResetInGame();
+void ResetInGame(const int& index);
 // 게임 플레이 페이지로 이동
-void InGame();
+void InGame(const int& index);
 // 곡 선택 창으로 이동
 void SongSelect();
 // 플레이 종료 절차
 void ClosePlaying();
+// 스토리모드 게임오버 화면 표시
+void StoryGameover();

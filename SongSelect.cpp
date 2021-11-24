@@ -56,11 +56,14 @@ void InitSelectPage(){
 			if (!key_block && pressed) {
 				key_block = true;
 				songs[song_index].Stop();
-				InGame();
+				InGame(song_index);
 			}
 		}
 		if (!key_block && key == KeyCode::KEY_BACKSPACE) {
-			endGame();
+			if (!pressed) {
+				songs[song_index].Stop();
+				GameMode();
+			}
 		}
 
 

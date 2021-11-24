@@ -148,6 +148,7 @@
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="SongInfo.cpp" />
     <ClCompile Include="SongSelect.cpp" />
+    <ClCompile Include="Story.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameResult.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="SongInfo.h" />
     <ClInclude Include="SongSelect.h" />
+    <ClInclude Include="Story.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

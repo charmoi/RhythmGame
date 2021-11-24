@@ -30,12 +30,11 @@ public:
 	void Stop();
 
 
-	//friend void InitSelectPage();
 	friend void Slide(char dir);
 	friend void SongSelect();
 
-	friend bool CreateMap(int& index, unique_ptr<bool[]>& note_map);
-	friend void ResetInGame();
+	friend bool CreateMap(const int& index, unique_ptr<bool[]>& note_map);
+	friend void ResetInGame(const int& index);
 
 	friend void ResetGameResult();
 	friend void GradeCalc();

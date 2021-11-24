@@ -4,7 +4,7 @@
 
 #pragma comment(lib, "winmm.lib")
 
-bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
+bool CreateMap(const int& index, unique_ptr<bool[]>& note_map) {
 	note_map.reset();
 	
 	ifstream map(songs[index].mapfile);
@@ -55,7 +55,7 @@ bool CreateMap(int& index, unique_ptr<bool[]>& note_map) {
 	map.close();
 	cout << "\nMap Copy Complete! Notes: " << count1 << " Empties: " << count0 << endl;
 	return true;
-};
+}
 
 bool NoteJudge(int press_time, int start_time) {
 	int diff_abs = abs(press_time - (start_time + delay));	// delay: 노트가 출발 지점(0)부터 judgeline(680)까지 도달하는 데 소요되는 시간(ms)
@@ -133,9 +133,15 @@ void SetKeyboard() {
 			break;
 		case KeyCode::KEY_BACKSPACE:
 			if (!pressed) {
-				songs[song_index].Stop();
 				ClosePlaying();
-				SongSelect();
+				if (onStoryMode) {
+					songs[songIndexStory].Stop();
+					GameMode();
+				}
+				else {
+					songs[song_index].Stop();
+					SongSelect();
+				}
 			}
 			break;
 		case KeyCode::KEY_ENTER:
@@ -143,14 +149,34 @@ void SetKeyboard() {
 				if (safeEnd) {
 					ClosePlaying();
 					if (isGameover) {
-						InGame();
+						if (onStoryMode) {
+							InGame(songIndexStory);
+						}
+						else {
+							InGame(song_index);
+						}
 						break;
 					}
 					else {
-						if (combo.GetScore() > comboMax) {	// All combo 달성시, 여기서 max combo 저장
-							comboMax = combo.GetScore();
+						if (onStoryMode) {
+							if (sceneIndex < 54) {	// 54번 장면이 마지막 스테이지
+								sceneIndex++;
+							}
+							else {
+								sceneIndex = 1;		// 1번 장면
+								if (score.GetScore() > MISSION)
+									storyRoute = 2;	// 성공 결말
+								else
+									storyRoute = 1; // 실패 결말
+							}
+							StoryMode(false);
 						}
-						GameResult();
+						else {
+							if (combo.GetScore() > comboMax) {	// All combo 달성시, 여기서 max combo 저장
+								comboMax = combo.GetScore();
+							}
+							GameResult();
+						}
 					}
 				}
 			}
@@ -179,7 +205,7 @@ void InitInGame() {
 	console = Object::create("Images/parachute_cs.png", ingame_page, 0, 0);	// 0번 곡 이미지로 임시 설정
 
 	string temp[10];
-	char buf[20];
+	char buf[30];
 	for (int i = 0; i < 10; i++) {
 		sprintf_s(buf, "Images/%d.png", i);
 		temp[i] = buf;
@@ -210,10 +236,18 @@ void InitInGame() {
 	press_enterRe = Object::create("Images/pressEnterReplay.png", ingame_page, 324, Y(496));
 	press_enterRe->hide();
 
+	instIngame = Object::create("Images/inst_ingame.png", ingame_page, 722, Y(686));
+
+	for (int i = 0; i < 4; i++) {
+		sprintf_s(buf, "Images/Story/gameover%d.png", i + 1);
+		SceneGameover[i] = Object::create(buf, ingame_page, 0, 0, false);
+	}
+	gameoverIndex = 1;
+
+	SceneClear = Object::create("Images/Story/bg_1.jpg", ingame_page, 0, 0, false);
+
 	clearSound = Sound::create("Sounds/gameclear.mp3");
 	overSound = Sound::create("Sounds/gameover.mp3");
-
-	instIngame = Object::create("Images/inst_ingame.png", ingame_page, 722, Y(686));
 
 	SetKeyboard();
 }
@@ -248,7 +282,12 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 
 	if (!songPlaying) {
 		if (frame_count++ >= trigger_frame) {
-			songs[song_index].Play(false);			// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
+			if (onStoryMode) {
+				songs[songIndexStory].Play(false);
+			}
+			else {
+				songs[song_index].Play(false);
+			}										// 타이머 호출 시점과 노래 시작을 맞추기 위해, 노래 시작 지점을 콜백 함수 안으로 넣음
 			songPlaying = true;						// 최초 재생 이후, 재생 반복 방지
 		}
 	}
@@ -269,12 +308,19 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 					combo.Reset();
 					judge.MissInc();
 					if (!hp.Decrease()) {
-						if (!safeEnd) {					// 중복 호출 방지
+						if (!safeEnd) {						// 중복 호출 방지
 							safeEnd = true;
-							isGameover = true;			// 게임 오버 알림
-							gameover->show();
-							songs[song_index].Stop();
-							overSound->play(false);
+							isGameover = true;				// 게임 오버 알림
+							if (onStoryMode) {
+								StoryGameover();
+								songs[songIndexStory].Stop();
+								// 스토리모드 게임오버 사운드 플레이
+							}
+							else {
+								gameover->show();
+								songs[song_index].Stop();
+								overSound->play(false);
+							}
 						}
 					}
 				}
@@ -285,8 +331,14 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 		if (frame_count++ > trigger_frame * 2 + 50) {		// 처음 시작할 때 frame count 한 거 + 마지막 노트 출발부터 판정선 도달까지 count + 50프레임 (20ms*50 = 1초)
 			if (!safeEnd) {									// 중복 호출 방지
 				safeEnd = true;								// 종료 키 (타이머 소멸 함수) 작동 가능
-				gameclear->show();
-				clearSound->play(false);
+				if (onStoryMode) {
+					SceneClear->show();
+					// 관객 환호
+				}
+				else {
+					gameclear->show();
+					clearSound->play(false);
+				}
 			}
 		}
 	}
@@ -310,8 +362,30 @@ VOID CALLBACK beatCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TI
 	}
 }
 
-void ResetInGame() {
-	console->setImage(songs[song_index].cs);
+void ResetInGame(const int& index) {
+	if (onStoryMode) {
+		switch (index) {
+		case 0:
+			console->setImage("Images/Story/cs_1.png");
+			break;
+		case 2:
+			console->setImage("Images/Story/cs_2.png");
+			break;
+		case 3:
+			console->setImage("Images/Story/cs_3.png");
+			break;
+		case 4:
+			console->setImage("Images/Story/cs_4.png");
+			break;
+		default:
+			cout << endl << "Wrong Scene Index Value: " << sceneIndex << endl;
+			endGame();
+			break;
+		}
+	}
+	else {
+		console->setImage(songs[index].cs);
+	}
 	score.Reset();
 	score.Show();
 	combo.Reset();
@@ -332,7 +406,7 @@ void ResetInGame() {
 	lastLine = false;
 	safeEnd = false;
 	frame_count = 1;								// frame_count는 1부터 시작
-	speed = songs[song_index].speed;				// trigger_frame 값이 정수로 나누어떨어지도록 680의 약수로 설정
+	speed = songs[index].speed;				// trigger_frame 값이 정수로 나누어떨어지도록 680의 약수로 설정
 	trigger_frame = 680 / speed;					
 	delay = uFres * trigger_frame;					// 노트 출발부터 도착까지 걸리는 시간 (ms단위)
 	judge.Reset();
@@ -343,11 +417,16 @@ void ResetInGame() {
 	press_enterRe->hide();
 	comboMax = 0;
 	isGameover = false;
+
+	for (int i = 0; i < 4; i++) {
+		SceneGameover[i]->hide();
+	}
+	SceneClear->hide();
 }
 
-void InGame() {
-	if (CreateMap(song_index, note_map)) {
-		ResetInGame();
+void InGame(const int& index) {
+	if (CreateMap(index, note_map)) {
+		ResetInGame(index);
 	}
 	else {
 		cout << "\nMap Building Failure." << endl;
@@ -369,11 +448,20 @@ void InGame() {
 void ClosePlaying() {
 	if (!timerDeleted) {
 		WaitForThreadpoolTimerCallbacks(pFTimer, TRUE);
-		WaitForThreadpoolTimerCallbacks(pBTimer, TRUE);
 		CloseThreadpoolTimer(pFTimer);
-		CloseThreadpoolTimer(pBTimer);
-		cout << endl << "Timer deleted" << endl;
+		cout << endl << "Timer1 deleted" << endl;
 		timerDeleted = true;
+	}
+	if (!beatTDeleted) {
+		WaitForThreadpoolTimerCallbacks(pBTimer, TRUE);
+		CloseThreadpoolTimer(pBTimer);
+		cout << endl << "Timer2 deleted" << endl;
 		beatTDeleted = true;
 	}
+}
+
+void StoryGameover() {
+	SceneGameover[gameoverIndex]->show();
+	if (++gameoverIndex > 4)
+		gameoverIndex = 1;
 }

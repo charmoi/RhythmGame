@@ -24,10 +24,12 @@ ObjectPtr shade;
 SoundPtr slide;
 bool key_block;
 
+// 게임 모드 선택으로 이동
+void GameMode();
 // 곡 선택 페이지 빌드
 void InitSelectPage();
 // 곡 선택 좌우 이동
 void Slide(char dir);
 void SongSelect();
 // 게임 플레이 페이지 이동
-void InGame();
+void InGame(const int& index);
