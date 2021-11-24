@@ -2,8 +2,8 @@
 
 void InitStoryMode() {
 	story_mode = Scene::create("스토리모드", "Images/Story/story1.png");
-	SceneImage = Object::create("Images/Story/story54.png", story_mode, 0, 0);
-	sceneIndex = 54;		// scene 넘버는 1부터 시작
+	SceneImage = Object::create("Images/Story/story1.png", story_mode, 0, 0);
+	sceneIndex = 1;		// scene 넘버는 1부터 시작
 
 	onStoryMode = false;
 	readyToPlay = false;
