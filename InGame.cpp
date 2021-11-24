@@ -322,10 +322,10 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 			if (!safeEnd) {									// 중복 호출 방지
 				safeEnd = true;								// 종료 키 (타이머 소멸 함수) 작동 가능
 				if (onStoryMode) {
-					if (sceneIndex < 54) {	// 54번 장면이 마지막 스테이지
+					if (storyRoute == 0 && sceneIndex < 54) {	// 54번 장면이 마지막 스테이지
 						sceneIndex++;
 					}
-					else {
+					else if (sceneIndex == 54 || storyRoute == 1) {
 						sceneIndex = 1;		// 1번 장면
 						if (score.GetScore() > MISSION)
 							storyRoute = 2;	// 성공 결말
