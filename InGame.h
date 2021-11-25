@@ -47,6 +47,8 @@ SoundPtr overSound;
 ObjectPtr instIngame;
 ObjectPtr SceneGameover[4];
 ObjectPtr SceneClear;
+SoundPtr strClearSnd;
+SoundPtr strOverSnd;
 
 //---------------ingame_page의 유동 변수-----------------
 

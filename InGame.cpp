@@ -136,6 +136,8 @@ void SetKeyboard() {
 				ClosePlaying();
 				if (onStoryMode) {
 					songs[songIndexStory].Stop();
+					strOverSnd->stop();
+					strClearSnd->stop();
 					GameMode();
 				}
 				else {
@@ -150,6 +152,7 @@ void SetKeyboard() {
 					ClosePlaying();
 					if (isGameover) {
 						if (onStoryMode) {
+							strOverSnd->stop();
 							InGame(songIndexStory);
 						}
 						else {
@@ -159,6 +162,7 @@ void SetKeyboard() {
 					}
 					else {
 						if (onStoryMode) {
+							strClearSnd->stop();
 							StoryMode(false);
 						}
 						else {
@@ -239,6 +243,9 @@ void InitInGame() {
 	clearSound = Sound::create("Sounds/gameclear.mp3");
 	overSound = Sound::create("Sounds/gameover.mp3");
 
+	strClearSnd = Sound::create("Sounds/Story/cheerweak2.mp3");
+	strOverSnd = Sound::create("Sounds/Story/impact.mp3");
+
 	SetKeyboard();
 }
 
@@ -304,7 +311,7 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 							if (onStoryMode) {
 								StoryGameover();
 								songs[songIndexStory].Stop();
-								// 스토리모드 게임오버 사운드 플레이
+								strOverSnd->play(false);
 							}
 							else {
 								gameover->show();
@@ -333,7 +340,7 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 							storyRoute = 1; // 실패 결말
 					}
 					SceneClear->show();
-					// 관객 환호
+					strClearSnd->play(false);
 				}
 				else {
 					gameclear->show();
