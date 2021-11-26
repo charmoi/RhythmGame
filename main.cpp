@@ -16,6 +16,7 @@ extern bool onStoryMode;
 
 ScenePtr game_mode;
 ObjectPtr opt[3];
+ObjectPtr putear;
 SoundPtr opening_bgm;
 SoundPtr click;
 char opt_index;
@@ -163,6 +164,7 @@ int main() {
 	ftStartTime.dwLowDateTime = ulStartTime.LowPart;
 
 	game_mode = Scene::create("모드선택", "Images/startoption.png");
+	putear = Object::create("Images/putear.png", game_mode, 106, Y(673));
 	opt[0] = Object::create("Images/opt1.png", game_mode, 238, Y(539));
 	opt[1] = Object::create("Images/opt2.png", game_mode, 538, Y(539));
 	opt[2] = Object::create("Images/opt3.png", game_mode, 836, Y(539));
