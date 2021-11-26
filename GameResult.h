@@ -8,6 +8,9 @@
 using namespace bangtal;
 using namespace std;
 
+//---------------Story에서 넘겨 받는 변수------------------
+extern bool onStoryMode;
+
 //---------------SongSelect에서 넘겨 받는 변수-------------
 extern SongInfo songs[];
 extern int song_index;
@@ -52,9 +55,9 @@ void SongSelect();
 // 게임 결과창 생성
 void InitGameResult();
 // Grade 계산 함수
-void GradeCalc();
+void GradeCalc(const int index);
 // Highscore 달성 여부 검사
-void HighscoreCalc();
+void HighscoreCalc(const int index);
 // 점수 올라가는 애니메이션
 VOID CALLBACK timerCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_TIMER Timer);
 // 게임 결과 창 리셋

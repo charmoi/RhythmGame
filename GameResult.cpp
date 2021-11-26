@@ -49,15 +49,15 @@ void InitGameResult() {
 
 }
 
-void GradeCalc() {
+void GradeCalc(const int index) {
 	if (isGameover) {
-		songs[song_index].grade = "Images/gradeF.png";
-		gradeResult->setImage(songs[song_index].grade);
+		songs[index].grade = "Images/gradeF.png";
+		gradeResult->setImage(songs[index].grade);
 		return;
 	}
 	if (judge.GetPerfect() == judge.GetTotal()) {
-		songs[song_index].grade = "Images/gradePFT.png";
-		gradeResult->setImage(songs[song_index].grade);
+		songs[index].grade = "Images/gradePFT.png";
+		gradeResult->setImage(songs[index].grade);
 		return;
 	}
 
@@ -67,22 +67,24 @@ void GradeCalc() {
 	double percentage = (double)score / max * 100;
 
 	if (percentage < 50)
-		songs[song_index].grade = "Images/gradeD.png";
+		songs[index].grade = "Images/gradeD.png";
 	else if (percentage < 70)
-		songs[song_index].grade = "Images/gradeC.png";
+		songs[index].grade = "Images/gradeC.png";
 	else if (percentage < 80)
-		songs[song_index].grade = "Images/gradeB.png";
+		songs[index].grade = "Images/gradeB.png";
 	else if (percentage < 90)
-		songs[song_index].grade = "Images/gradeA.png";
+		songs[index].grade = "Images/gradeA.png";
 	else
-		songs[song_index].grade = "Images/gradeS.png";
-
-	gradeResult->setImage(songs[song_index].grade);
+		songs[index].grade = "Images/gradeS.png";
+	
+	if (!onStoryMode) {
+		gradeResult->setImage(songs[index].grade);
+	}
 }
 
-void HighscoreCalc() {
-	if (songs[song_index].highscore < score.GetScore()) {
-		songs[song_index].highscore = score.GetScore();
+void HighscoreCalc(const int index) {
+	if (songs[index].highscore < score.GetScore()) {
+		songs[index].highscore = score.GetScore();
 		isNewRecord = true;
 	}
 }
@@ -207,8 +209,8 @@ void GameResult() {
 	// bgm ÇÃ·¹ÀÌ
 	ResetGameResult();
 
-	GradeCalc();
-	HighscoreCalc();
+	GradeCalc(song_index);
+	HighscoreCalc(song_index);
 
 	pFTimer = CreateThreadpoolTimer(timerCallback, NULL, NULL);
 	timerDeleted = false;

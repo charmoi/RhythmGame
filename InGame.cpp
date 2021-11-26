@@ -339,6 +339,8 @@ VOID CALLBACK frameCallback(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_T
 						else
 							storyRoute = 1; // 실패 결말
 					}
+					GradeCalc(songIndexStory);
+					HighscoreCalc(songIndexStory);
 					SceneClear->show();
 					strClearSnd->play(false);
 				}

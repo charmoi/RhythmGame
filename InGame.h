@@ -96,6 +96,10 @@ void StoryMode(bool restart);
 void GameResult();
 // 게임 모드 선택으로 이동
 void GameMode();
+// Grade 계산 함수
+void GradeCalc(const int index);
+// Highscore 달성 여부 검사
+void HighscoreCalc(const int index);
 
 // 노트 맵 생성
 bool CreateMap(const int& index, unique_ptr<bool[]>& note_map);

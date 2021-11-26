@@ -37,6 +37,6 @@ public:
 	friend void ResetInGame(const int& index);
 
 	friend void ResetGameResult();
-	friend void GradeCalc();
-	friend void HighscoreCalc();
+	friend void GradeCalc(const int index);
+	friend void HighscoreCalc(const int index);
 };
