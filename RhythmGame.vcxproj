@@ -139,28 +139,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameResult.cpp" />
-    <ClCompile Include="HP.cpp" />
-    <ClCompile Include="InGame.cpp" />
-    <ClCompile Include="Judge.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Note.cpp" />
-    <ClCompile Include="Score.cpp" />
-    <ClCompile Include="SongInfo.cpp" />
-    <ClCompile Include="SongSelect.cpp" />
-    <ClCompile Include="Story.cpp" />
+    <ClCompile Include="Codes\GameResult.cpp" />
+    <ClCompile Include="Codes\HP.cpp" />
+    <ClCompile Include="Codes\InGame.cpp" />
+    <ClCompile Include="Codes\Judge.cpp" />
+    <ClCompile Include="Codes\main.cpp" />
+    <ClCompile Include="Codes\Note.cpp" />
+    <ClCompile Include="Codes\Score.cpp" />
+    <ClCompile Include="Codes\SongInfo.cpp" />
+    <ClCompile Include="Codes\SongSelect.cpp" />
+    <ClCompile Include="Codes\Story.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameResult.h" />
-    <ClInclude Include="HP.h" />
-    <ClInclude Include="InGame.h" />
-    <ClInclude Include="Judge.h" />
-    <ClInclude Include="Note.h" />
-    <ClInclude Include="Others.h" />
-    <ClInclude Include="Score.h" />
-    <ClInclude Include="SongInfo.h" />
-    <ClInclude Include="SongSelect.h" />
-    <ClInclude Include="Story.h" />
+    <ClInclude Include="Codes\GameResult.h" />
+    <ClInclude Include="Codes\HP.h" />
+    <ClInclude Include="Codes\InGame.h" />
+    <ClInclude Include="Codes\Judge.h" />
+    <ClInclude Include="Codes\Note.h" />
+    <ClInclude Include="Codes\Others.h" />
+    <ClInclude Include="Codes\Score.h" />
+    <ClInclude Include="Codes\SongInfo.h" />
+    <ClInclude Include="Codes\SongSelect.h" />
+    <ClInclude Include="Codes\Story.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

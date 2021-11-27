@@ -15,66 +15,66 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Codes\GameResult.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SongSelect.cpp">
+    <ClCompile Include="Codes\HP.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SongInfo.cpp">
+    <ClCompile Include="Codes\InGame.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Score.cpp">
+    <ClCompile Include="Codes\Judge.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="InGame.cpp">
+    <ClCompile Include="Codes\main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Note.cpp">
+    <ClCompile Include="Codes\Note.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Judge.cpp">
+    <ClCompile Include="Codes\Score.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="HP.cpp">
+    <ClCompile Include="Codes\SongInfo.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="GameResult.cpp">
+    <ClCompile Include="Codes\SongSelect.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Story.cpp">
+    <ClCompile Include="Codes\Story.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SongInfo.h">
+    <ClInclude Include="Codes\GameResult.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Others.h">
+    <ClInclude Include="Codes\HP.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Score.h">
+    <ClInclude Include="Codes\InGame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Note.h">
+    <ClInclude Include="Codes\Judge.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="InGame.h">
+    <ClInclude Include="Codes\Note.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SongSelect.h">
+    <ClInclude Include="Codes\Others.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Judge.h">
+    <ClInclude Include="Codes\Score.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HP.h">
+    <ClInclude Include="Codes\SongInfo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="GameResult.h">
+    <ClInclude Include="Codes\SongSelect.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Story.h">
+    <ClInclude Include="Codes\Story.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
