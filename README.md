@@ -5,7 +5,7 @@
 # 게임 설치 및 실행 방법
 
     1) RhythmGame_Installer.msi 파일을 다운받아 실행시킨다
-   ![install1](https://user-images.githubusercontent.com/77092257/143666189-c8c5039a-77f9-41a1-822e-215841dc6605.png)
+![install1](https://user-images.githubusercontent.com/77092257/143666189-c8c5039a-77f9-41a1-822e-215841dc6605.png)
     
     2) 파일이 실행되면 원하는 위치에 프로그램 리소스를 설치한다
 ![install2](https://user-images.githubusercontent.com/77092257/143666226-0310652f-30f9-4c85-9fcf-0b1137233f4e.png)
