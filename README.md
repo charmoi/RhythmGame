@@ -1,53 +1,23 @@
 # RhythmGame
 
-방탈 라이브러리를 활용하여 제작한, 리듬 게임입니다.
+방탈 라이브러리를 활용하여 제작한, **리듬 게임**입니다.
 
+# 게임 설치 및 실행 방법
 
-본 프로그램은 크게 다음의 세 파트로 설계했습니다.
-
-1. 곡 선택 창
-
-2. 게임 플레이 창
-
-3. 결과 표시 창
-
-유저는 위의 1-2-3 순서를 따르며 게임을 진행합니다. 3번 창은 1번 창으로 이어지며, 게임이 반복됩니다.
-
-# 진척도
-
-1. 곡 선택 창: High score, Grade 받아서 보여주는 함수 미작성
-
-2. 게임 플레이 창에서는 아직 개발이 덜 된 상태입니다. 자세한 내용은 아래와 같습니다.
-    // NAKKA (AKMU, IU)외 다른 곡들은 맵 파일을 제작하지 않음. 현재 NAKKA만 플레이 가능
-
-    2-1. 노트 하강 애니메이션: 20ms 프레임
+    1) RhythmGame_Installer.msi 파일을 다운받아 실행시킨다
+    ![install1](https://user-images.githubusercontent.com/77092257/143666189-c8c5039a-77f9-41a1-822e-215841dc6605.png)
     
-    사용가능한 bpm 제한: 60, 75, 100, 125, 150
+    2) 파일이 실행되면 원하는 위치에 프로그램 리소스를 설치한다
+    ![install2](https://user-images.githubusercontent.com/77092257/143666226-0310652f-30f9-4c85-9fcf-0b1137233f4e.png)
     
-    예시곡)
-    75bpm: parachute, Leave the door open (74)
-    100bpm: NAKKA, Celebrity
-    125bpm: Permission to dance, We go, Rollin', Bad habits (126)
-    150bpm: 색안경
-    
-    한 박을 4분할로 나누면, 120, 200도 가능
-    
-    1번곡: parachute - John K
-    
-    2번곡: We go - Fromis_9
-    
-    3번곡: NAKKA - AKMU, IU
-    
-    4번곡: Permission to dance - BTS
+    3) 바탕화면 또는 시작메뉴의 프로그램 목록에서 'RhythmGame' 바로가기를 찾아 클릭하여 게임을 실행한다
+    ![install3](https://user-images.githubusercontent.com/77092257/143666325-b55b4b02-0bc6-462a-8fc2-d8d098a1350c.png)
 
-    2-2. 노트 판정 함수: 완료
-  
-    2-3. 스코어 표시: 완료
+# 게임 삭제 방법
 
-    2-4. 체력 표시: 완료
+    RhythmGame_Installer.msi를 실행시켜 '제거' 옵션을 선택한다
+    ![uninstall](https://user-images.githubusercontent.com/77092257/143666362-5b055c75-df58-4734-b91a-a7caca2cb65b.png)
+    
 
-    2-5. 콤보 표시: 완료
+# 게임 설명
 
-3. 결과 표시 창: 완료; 효과음 음량 등 디테일한 부분 수정 필요
-
-4. 게임에 사용할 이미지 소스와 사운드 소스는 대부분 사전에 만들어 두었습니다. 일러스트나 포토샵으로 이미지 제작이 가능하신 분이 있다면 ai 파일을 공유해드리도록 하겠습니다.
