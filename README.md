@@ -47,10 +47,13 @@ eogusl98@naver.com
 
 ## 스토리 모드
 1) 스토리 모드는 20대 절친들로 이루어진 '객체 밴드'의 오디션 도전기를 담고 있습니다.
-![inst2](https://user-images.githubusercontent.com/77092257/143667028-4eb41658-a04f-43c3-a580-b4ea97f26ef4.png)
 
 2) 스토리 중간에는 총 4개의 Stage가 있으며, 게임오버되지 않고 곡을 클리어하면 다음 Stage로 넘어갈 수 있습니다.
+
 3) 마지막 Stage에는 Mission 점수가 걸려있습니다. Mission 달성 여부에 따라 서로 다른 엔딩으로 진행되니 신중히 플레이하시길 바랍니다!
+
+![inst2](https://user-images.githubusercontent.com/77092257/143667028-4eb41658-a04f-43c3-a580-b4ea97f26ef4.png)
+
 ![inst3](https://user-images.githubusercontent.com/77092257/143667128-e4159bfb-6a8c-4c1f-a921-9a88c6957540.png)
 
 ## 자유 모드
