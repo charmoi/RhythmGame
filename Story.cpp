@@ -68,11 +68,12 @@ void SetKeyStory() {
 			break;
 		case KeyCode::KEY_ENTER:
 			if (!pressed) {
-				CloseSounds();
 				if (readyToPlay) {
+					CloseSounds();
 					InGame(songIndexStory);
 				}
 				if (happyEnd) {
+					CloseSounds();
 					happyEnd = false;
 					storyRoute = FAIL_R;
 					sceneIndex = 1;
