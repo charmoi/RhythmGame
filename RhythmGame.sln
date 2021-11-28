@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RhythmGame", "RhythmGame.vcxproj", "{3248D1EC-F4C4-4E77-9DB0-7DA89FC7031F}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RhythmGame_Installer", "RhythmGame_Installer\RhythmGame_Installer.vdproj", "{101E5603-E955-4F83-8CDB-6F91C2A087BC}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RhythmGame_Installer", "RhythmGame_Installer\RhythmGame_Installer.vdproj", "{061A41CE-F372-46CC-8801-A6F3416BA347}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{3248D1EC-F4C4-4E77-9DB0-7DA89FC7031F}.Release|x64.Build.0 = Release|x64
 		{3248D1EC-F4C4-4E77-9DB0-7DA89FC7031F}.Release|x86.ActiveCfg = Release|Win32
 		{3248D1EC-F4C4-4E77-9DB0-7DA89FC7031F}.Release|x86.Build.0 = Release|Win32
-		{101E5603-E955-4F83-8CDB-6F91C2A087BC}.Debug|x64.ActiveCfg = Debug
-		{101E5603-E955-4F83-8CDB-6F91C2A087BC}.Debug|x86.ActiveCfg = Debug
-		{101E5603-E955-4F83-8CDB-6F91C2A087BC}.Release|x64.ActiveCfg = Release
-		{101E5603-E955-4F83-8CDB-6F91C2A087BC}.Release|x86.ActiveCfg = Release
+		{061A41CE-F372-46CC-8801-A6F3416BA347}.Debug|x64.ActiveCfg = Debug
+		{061A41CE-F372-46CC-8801-A6F3416BA347}.Debug|x86.ActiveCfg = Debug
+		{061A41CE-F372-46CC-8801-A6F3416BA347}.Release|x64.ActiveCfg = Release
+		{061A41CE-F372-46CC-8801-A6F3416BA347}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
