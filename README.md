@@ -24,7 +24,9 @@ eogusl98@naver.com
 
 # 게임 삭제 방법
 *게임을 삭제해도 스토리모드 진행도, 곡별 최고점 및 등급과 같은 게임 데이터는 삭제되지 않습니다.
+
 *게임 데이터까지 삭제하시려면, 프로그램이 설치된 경로에서 'userdata.bin' 파일을 삭제해주시면 됩니다.
+
 *기본 프로그램 설치 경로는 다음과 같습니다. C:\Program Files (x86)\Daehyeon Shin\RhythmGame_Installer
 
     RhythmGame_Installer.msi를 실행시켜 '제거' 옵션을 선택한다
