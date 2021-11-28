@@ -1,7 +1,9 @@
 #include <bangtal>
 #include <iostream>
+#include <fstream>
 #include <Windows.h>
 #include "Others.h"
+#include "Songinfo.h"
 
 using namespace bangtal;
 using namespace std;
@@ -22,6 +24,15 @@ SoundPtr click;
 char opt_index;
 bool bgmPlayed;
 
+//------------게임 데이터 저장용--------------
+
+bool dataLoaded;				// 읽어올 데이터가 있는지
+extern SongInfo songs[];
+extern int songlen;
+extern int storyRoute;
+extern int sceneIndex;
+
+//----------------외부 함수------------------
 
 void InitStoryMode();			// 스토리 모드 생성
 void InitSelectPage();			// 곡 선택 페이지 생성
@@ -30,9 +41,12 @@ void InitGameResult();			// 게임 결과창 생성
 void SongSelect();				// 곡 선택 페이지 이동
 void StoryMode(bool restart);	// 스토리 모드 시작
 
+//--------------------함수------------------
+
 void GameMode();				// 게임 모드 선택
 void SetKeyGameMode();			// 게임 모드 키설정
 void Opening();					// 게임 오프닝 빌드
+bool SaveData();				// 게임 데이터(스토리 모드 진행도, 곡별 최고점 및 등급) 저장
 
 void GameMode() {
 	onStoryMode = false;
@@ -149,6 +163,76 @@ void Opening() {
 	startGame(start_page);
 }
 
+bool LoadData() {
+	ifstream fin;
+	fin.open("userdata.bin", ios::in | ios::binary);
+
+	if (fin.is_open()) {
+		fin.read((char*)&storyRoute, sizeof(int));
+		fin.read((char*)&sceneIndex, sizeof(int));
+
+		for (int i = 0; i < songlen; i++) {
+			fin.read((char*)&songs[i].highscore, sizeof(int));
+			char gradecheck = '\0';
+			fin.read((char*)&gradecheck, sizeof(char));
+			switch (gradecheck) {
+			case 'P':
+				songs[i].grade = "Images/gradePFT.png";
+				songs[i].grade_c = 'P';
+				break;
+			case 'S':
+				songs[i].grade = "Images/gradeS.png";
+				songs[i].grade_c = 'S';
+				break;
+			case 'A':
+				songs[i].grade = "Images/gradeA.png";
+				songs[i].grade_c = 'A';
+				break;
+			case 'B':
+				songs[i].grade = "Images/gradeB.png";
+				songs[i].grade_c = 'B';
+				break;
+			case 'C':
+				songs[i].grade = "Images/gradeC.png";
+				songs[i].grade_c = 'C';
+				break;
+			case 'D':
+				songs[i].grade = "Images/gradeD.png";
+				songs[i].grade_c = 'D';
+				break;
+			default:
+				songs[i].grade = "\0";
+				songs[i].grade_c = '\0';
+				break;
+			}
+		}
+		fin.close();
+	}
+	else
+		return false;
+
+	return true;
+}
+
+bool SaveData() {
+	ofstream fout;
+	fout.open("userdata.bin", ios::out | ios::binary);
+
+	if (fout.is_open()) {
+		fout.write((const char*)&storyRoute, sizeof(int));
+		fout.write((const char*)&sceneIndex, sizeof(int));
+
+		for (int i = 0; i < songlen; i++) {
+			fout.write((const char*)&songs[i].highscore, sizeof(int));
+			fout.write((const char*)&songs[i].grade_c, sizeof(char));
+		}
+		fout.close();
+	}
+	else
+		return false;
+
+	return true;
+}
 
 int main() {
 	setGameOption(GameOption::GAME_OPTION_INVENTORY_BUTTON, false);
@@ -179,10 +263,23 @@ int main() {
 	InitSelectPage();
 	InitInGame();
 	InitGameResult();
+
+	if (LoadData()) {
+		cout << endl << "User Data Loaded" << endl;
+	}
+	else
+		cout << endl << "User Data Not Found" << endl;
+
 	Opening();		// 게임 시작 지점
 
 
 	//-------------------프로그램 종료 시 실행-------------------------
+
+	if (SaveData()) {
+		cout << endl << "User Data Saved" << endl;
+	}
+	else
+		cout << endl << "Data Save Failed" << endl;
 
 	if (!timerDeleted) {
 		WaitForThreadpoolTimerCallbacks(pFTimer, true);

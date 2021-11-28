@@ -1,4 +1,6 @@
 #include "Story.h"
+#include <iostream>
+#include <fstream>
 
 void InitStoryMode() {
 	story_mode = Scene::create("스토리모드", "Images/Story/story1.png");
@@ -260,9 +262,10 @@ void CheckSceneSuccess(int& index) {
 		break;
 	}
 
-	fx[0]->play();
+
 	bgmIndex = 9;
 	if (!bgmPlaying[bgmIndex]) {
+		fx[0]->play();
 		bgm[bgmIndex]->play();
 		bgmPlaying[bgmIndex] = true;
 	}

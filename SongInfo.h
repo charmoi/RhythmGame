@@ -17,6 +17,7 @@ protected:
 	string mapfile;
 	int highscore;
 	string grade;
+	char grade_c;
 	char speed;
 
 public:
@@ -29,6 +30,9 @@ public:
 	// 노래 정지
 	void Stop();
 
+	
+	friend bool LoadData();
+	friend bool SaveData();
 
 	friend void Slide(char dir);
 	friend void SongSelect();

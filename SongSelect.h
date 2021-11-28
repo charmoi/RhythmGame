@@ -12,6 +12,7 @@
 ScenePtr select_page;
 int song_index;	// 현재 선택한 곡 index
 SongInfo songs[SONG_MAX];
+int songlen;
 ObjectPtr background;
 ObjectPtr selected_bg;
 ObjectPtr song_selected, song_left, song_right;

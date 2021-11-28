@@ -52,11 +52,13 @@ void InitGameResult() {
 void GradeCalc(const int index) {
 	if (isGameover) {
 		songs[index].grade = "Images/gradeF.png";
+		songs[index].grade_c = 'F';
 		gradeResult->setImage(songs[index].grade);
 		return;
 	}
 	if (judge.GetPerfect() == judge.GetTotal()) {
 		songs[index].grade = "Images/gradePFT.png";
+		songs[index].grade_c = 'P';
 		gradeResult->setImage(songs[index].grade);
 		return;
 	}
@@ -66,16 +68,26 @@ void GradeCalc(const int index) {
 
 	double percentage = (double)score / max * 100;
 
-	if (percentage < 50)
+	if (percentage < 50) {
 		songs[index].grade = "Images/gradeD.png";
-	else if (percentage < 70)
+		songs[index].grade_c = 'D';
+	}
+	else if (percentage < 70) {
 		songs[index].grade = "Images/gradeC.png";
-	else if (percentage < 80)
+		songs[index].grade_c = 'C';
+	}
+	else if (percentage < 80) {
 		songs[index].grade = "Images/gradeB.png";
-	else if (percentage < 90)
+		songs[index].grade_c = 'B';
+	}
+	else if (percentage < 90) {
 		songs[index].grade = "Images/gradeA.png";
-	else
+		songs[index].grade_c = 'A';
+	}
+	else {
 		songs[index].grade = "Images/gradeS.png";
+		songs[index].grade_c = 'S';
+	}
 	
 	if (!onStoryMode) {
 		gradeResult->setImage(songs[index].grade);

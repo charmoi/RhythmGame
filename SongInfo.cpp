@@ -9,6 +9,7 @@ SongInfo::SongInfo() {
 	mapfile = "\0";
 	highscore = 0;
 	grade = "\0";
+	grade_c = '\0';
 	speed = 0;
 }
 
@@ -17,6 +18,7 @@ SongInfo::SongInfo(const string& bg, const string& img, const string& info, cons
 	this->sound = Sound::create(sound);
 	highscore = 0;
 	grade = "\0";
+	grade_c = '\0';
 }
 
 void SongInfo::Create(const string& bg, const string& img, const string& info, const string& sound, const string& cs, const string& result, const string& mapfile, const char speed){
