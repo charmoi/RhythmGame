@@ -27,7 +27,7 @@ eogusl98@naver.com
 4) '자유모드'에서는 스토리 모드에 등장하는 곡들을 좀 더 다양한 난이도로 즐길 수 있습니다.
 ![inst1](https://user-images.githubusercontent.com/77092257/143666881-2e6e1e08-7a8a-47a2-80e5-66829aadbf39.png)
 
-![inst6](https://user-images.githubusercontent.com/77092257/144955955-2f2dda39-a56c-45f1-b92e-4261d9fbb4d3.png)
+![inst6](https://user-images.githubusercontent.com/77092257/144956027-df4d073f-3e25-4df2-b349-91681b066b55.png)
 
 
 ## 스토리 모드
